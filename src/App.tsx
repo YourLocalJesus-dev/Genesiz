@@ -65,9 +65,9 @@ export default function App() {
 
   if (secretOpen) {
     return (
-      <div className="fixed inset-0 select-none" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#0a0908", color: "#e2d5c1", zIndex: 9999 }}>
-        <div className="f-serif italic" style={{ fontSize: 220, lineHeight: 1, textShadow: "0 0 40px rgba(226, 213, 193, 0.2)" }}>G</div>
-        <div className="f-mono" style={{ fontSize: 14, letterSpacing: "0.4em", textTransform: "uppercase", marginTop: 40, color: "rgba(226, 213, 193, 0.5)" }}>yay the mods found it</div>
+      <div className="fixed inset-0 select-none px-6" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#0a0908", color: "#e2d5c1", zIndex: 9999 }}>
+        <div className="f-serif italic" style={{ fontSize: "clamp(100px, 25vw, 220px)", lineHeight: 1, textShadow: "0 0 40px rgba(226, 213, 193, 0.2)" }}>G</div>
+        <div className="f-mono text-center" style={{ fontSize: "clamp(10px, 2.5vw, 14px)", letterSpacing: "clamp(0.2em, 0.5vw, 0.4em)", textTransform: "uppercase", marginTop: "clamp(20px, 4vh, 40px)", color: "rgba(226, 213, 193, 0.5)" }}>yay the mods found it</div>
         <button
           className="f-mono"
           data-native
@@ -79,7 +79,7 @@ export default function App() {
             e.stopPropagation();
             closeSecret();
           }}
-          style={{ marginTop: 80, padding: "12px 24px", border: "1px solid rgba(226, 213, 193, 0.3)", borderRadius: 999, background: "none", color: "inherit", cursor: "pointer", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase" }}
+          style={{ marginTop: "clamp(40px, 8vh, 80px)", padding: "12px 24px", border: "1px solid rgba(226, 213, 193, 0.3)", borderRadius: 999, background: "none", color: "inherit", cursor: "pointer", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase" }}
         >
           return to bench
         </button>
@@ -131,7 +131,7 @@ export default function App() {
 
       <AnimatePresence>
         {w.tableOpen && w.view === "bench" && (
-          <IndexTable catalog={w.catalog} activeId={w.activeId} solved={w.solved} />
+          <IndexTable catalog={w.catalog} activeId={w.activeId} solved={w.solved} sockets={w.sockets} />
         )}
       </AnimatePresence>
 

@@ -12,7 +12,7 @@ export default function ReadmeModal({ onClose }: Props) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-8"
       style={{
         background: "rgba(5, 4, 3, 0.88)",
         backdropFilter: "blur(10px)",
@@ -28,7 +28,7 @@ export default function ReadmeModal({ onClose }: Props) {
         style={{
           width: "100%",
           maxWidth: 720,
-          maxHeight: "85vh",
+          maxHeight: "88vh",
           display: "flex",
           flexDirection: "column",
           background: "#0d0b09",
@@ -45,7 +45,7 @@ export default function ReadmeModal({ onClose }: Props) {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            padding: "16px 24px",
+            padding: "12px 18px",
             borderBottom: "1px solid rgba(226, 213, 193, 0.12)",
           }}
         >
@@ -85,7 +85,7 @@ export default function ReadmeModal({ onClose }: Props) {
           className="cat-scroll"
           style={{
             overflowY: "auto",
-            padding: "28px 28px 40px",
+            padding: "20px 18px 36px",
             color: "rgba(226, 213, 192, 0.82)",
             fontSize: 13,
             lineHeight: 1.85,

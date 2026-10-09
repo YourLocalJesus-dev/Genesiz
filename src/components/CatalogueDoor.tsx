@@ -21,7 +21,6 @@ export default function CatalogueDoor({ visits, onEnter }: { visits: number; onE
         gap: 0,
       }}
     >
-      {}
       <motion.div
         animate={{ opacity: hot ? 0.55 : 0.22, width: hot ? 150 : 110 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
@@ -59,7 +58,6 @@ export default function CatalogueDoor({ visits, onEnter }: { visits: number; onE
           cursor: "pointer",
         }}
       >
-        {}
         {[
           { l: 6, t: 6 },
           { l: "calc(100% - 9px)", t: 6 },
@@ -80,7 +78,6 @@ export default function CatalogueDoor({ visits, onEnter }: { visits: number; onE
           />
         ))}
 
-        {}
         <span style={{ position: "relative", width: 22, height: 22, flex: "0 0 22px" }}>
           <motion.span
             animate={{ scale: hot ? [1, 1.7] : 1, opacity: hot ? [0.5, 0] : 0 }}
@@ -152,7 +149,6 @@ export default function CatalogueDoor({ visits, onEnter }: { visits: number; onE
         </motion.span>
       </motion.button>
 
-      {}
       <motion.div
         animate={{ opacity: hot ? 0.55 : 0.22, width: hot ? 150 : 110 }}
         transition={{ duration: 0.6, ease: "easeOut" }}

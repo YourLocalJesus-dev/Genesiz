@@ -73,7 +73,6 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
     }
   };
 
-  /* the lens narrows the record to its own specimen */
   const ledgerSource = lensId ? marks.filter((m) => m.type === lensId) : marks;
   const ledger = [...ledgerSource].reverse().slice(0, L.variant === "annotated" ? 8 : 18);
   const routes = Object.entries(sig.edges)
@@ -82,10 +81,6 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
     .slice(0, 6);
 
   const S = (n: number) => Math.round(n * L.gap);
-
-  /* ------------------------------------------------------------------ */
-  /*  Sections                                                           */
-  /* ------------------------------------------------------------------ */
 
   const SectionOrder = (
     <Section key="order" id="cat-order" n="The order" L={L}>
@@ -352,8 +347,6 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
     ledger: SectionLedger,
   };
 
-  /* ------------------------------------------------------------------ */
-
   return (
     <motion.div
       data-native
@@ -506,10 +499,6 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Specimen cells — one per layout paradigm                           */
-/* ------------------------------------------------------------------ */
-
 function SpecimenCell({
   id, i, L, selected, onPick, usage, marks, dwell,
 }: {
@@ -536,7 +525,6 @@ function SpecimenCell({
     color: "inherit",
   };
 
-  /* knife — a bare strip */
   if (L.variant === "strip") {
     return (
       <button onClick={onPick} className="cat-card" style={{ ...shell, padding: "18px 8px", textAlign: "center" }}>
@@ -547,7 +535,6 @@ function SpecimenCell({
     );
   }
 
-  /* pen — a ruled list row */
   if (L.variant === "row") {
     return (
       <button onClick={onPick} className="cat-card" style={{ ...shell, display: "flex", alignItems: "center", gap: 18, padding: "16px 18px", borderBottom: `1px solid ${L.hair}` }}>
@@ -562,7 +549,6 @@ function SpecimenCell({
     );
   }
 
-  /* brush — a large washed field */
   if (L.variant === "wash") {
     const c = BRUSH_COLORS[i % BRUSH_COLORS.length];
     return (
@@ -577,7 +563,6 @@ function SpecimenCell({
     );
   }
 
-  /* ruler — a measured plate */
   if (L.variant === "plate") {
     return (
       <button onClick={onPick} className="cat-card" style={{ ...shell, padding: "22px 20px 18px" }}>
@@ -593,7 +578,6 @@ function SpecimenCell({
     );
   }
 
-  /* magnifier — enlarged with marginalia */
   if (L.variant === "annotated") {
     return (
       <button onClick={onPick} className="cat-card" style={{ ...shell, display: "flex", gap: 28, padding: "26px 24px", borderBottom: `1px solid ${L.hair}`, alignItems: "flex-start" }}>
@@ -612,7 +596,6 @@ function SpecimenCell({
     );
   }
 
-  /* clamp (framed box) + default card */
   return (
     <button onClick={onPick} className="cat-card" style={{ ...shell, padding: "26px 24px 22px" }}>
       {L.framed && (
@@ -631,8 +614,6 @@ function SpecimenCell({
     </button>
   );
 }
-
-/* ------------------------------------------------------------------ */
 
 function Section({ id, n, L, children, aside }: { id: string; n: string; L: Lens; children: React.ReactNode; aside?: React.ReactNode }) {
   return (

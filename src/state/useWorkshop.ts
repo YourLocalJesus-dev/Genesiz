@@ -89,17 +89,20 @@ export function useWorkshop() {
     if (!stored) return freshTools();
     return TOOL_IDS.map((id) => {
       const s = stored.tools[id];
+      const catIdx = stored.catalog ? stored.catalog.indexOf(id) : -1;
+      const pos = catIdx >= 0 ? { ...SOCKETS[catIdx] } : s?.pos ? { ...s.pos } : { ...START_POS[id] };
+      const rot = catIdx >= 0 ? 0 : s?.rot ?? START_ROT[id];
       return {
         id,
-        pos: s?.pos ? { ...s.pos } : { ...START_POS[id] },
-        rot: s?.rot ?? START_ROT[id],
+        pos,
+        rot,
         vis: "idle" as const,
         usage: s?.usage ?? 0,
         dwellMs: s?.dwellMs ?? 0,
         remembered: true,
         greeted: false,
-        tuckedInto: s?.tuckedInto ?? null,
-        drawerSlot: s?.drawerSlot ?? 0,
+        tuckedInto: catIdx >= 0 ? null : s?.tuckedInto ?? null,
+        drawerSlot: catIdx >= 0 ? 0 : s?.drawerSlot ?? 0,
       };
     });
   });
@@ -600,7 +603,6 @@ export function useWorkshop() {
     if (activeId && now - pr.t < 520 && moved < 14) putdown(activeId, pct(mx.get(), my.get()));
   };
 
-  /* ---------------- global listeners ---------------- */
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
       const x = e.clientX;
@@ -637,14 +639,12 @@ export function useWorkshop() {
       const speed = lm ? Math.hypot(x - lm.x, y - lm.y) : 0;
       lastMove.current = { x, y, t: performance.now() };
 
-      // cabinet hover (drawers)
       const cab = cabinetAt(tools, x, y);
       if (cab !== openCab) {
         if (cab) sound.drawerSlide();
         setOpenCab(cab);
       }
 
-      // hover candidate
       let cand: ToolId | null = null;
       let best = Infinity;
       pickables(tools).forEach((p) => {
@@ -669,7 +669,6 @@ export function useWorkshop() {
         }
       }
 
-      // tools waiting in the dark reveal themselves as you search
       if (mode === "empty" && !activeId) {
         const foundIds: ToolId[] = [];
         let touched = false;
@@ -697,18 +696,14 @@ export function useWorkshop() {
         }
       }
 
-      // hand brushing across empty wood
       if (!cand && speed > 5) sound.scrape(speed);
 
-      // held-tool tilt
       if (activeId && lm) rotTarget.set(clampN((x - lm.x) * 0.55, -13, 13));
 
-      // the pool of light answers attention
       lsTarget.set(
         cand ? 0.82 : activeId ? 1.06 : mode === "empty" && speed > 4 ? 1.32 : 1,
       );
 
-      // a held tool, kept still, begins to promise a mark
       if (previewTimer.current) window.clearTimeout(previewTimer.current);
       if (activeId && !pressRef.current) {
         setPreview(false);
@@ -780,7 +775,6 @@ export function useWorkshop() {
     };
   });
 
-  /* ---------------- persistence ---------------- */
   useEffect(() => {
     const t = window.setTimeout(() => {
       try {
@@ -811,13 +805,11 @@ export function useWorkshop() {
         };
         localStorage.setItem(KEY, JSON.stringify(payload));
       } catch {
-        /* private mode */
       }
     }, 600);
     return () => window.clearTimeout(t);
   }, [tools, marks, mode, edges, order, focused, muted, catalog, solved, visits, base]);
 
-  /* ---------------- controls ---------------- */
   const toggleMute = () => {
     sound.unlock();
     setMuted((m) => {
@@ -829,19 +821,16 @@ export function useWorkshop() {
     try {
       localStorage.removeItem(KEY);
     } catch {
-      /* ignore */
     }
     window.location.reload();
   };
 
-  /* the catalogue picking up a specimen as its lens */
   const sampleTool = (id: ToolId | null) => {
     sound.unlock();
     sound.pageTurn();
     if (id) sound.markVoice(id);
   };
 
-  /* a snapshot of everything the bench has been watching */
   const getSignals = () => ({
     scores: { ...tracker.scores },
     dwell: { ...tracker.dwell },

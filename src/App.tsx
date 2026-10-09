@@ -10,6 +10,7 @@ import Overlays from "./components/Overlays";
 import Hud from "./components/HUD";
 import IndexTable from "./components/IndexTable";
 import CatalogSite from "./components/CatalogSite";
+import CatalogueDoor from "./components/CatalogueDoor";
 import DustMotes from "./components/DustMotes";
 import ReadmeModal from "./components/ReadmeModal";
 
@@ -126,10 +127,10 @@ export default function App() {
         </motion.div>
       )}
 
-      {w.scatteredLike && <PathsLayer edges={w.edges} tools={w.tools} hoverId={w.hoverId} />}
+      {w.scatteredLike && !w.solved && <PathsLayer edges={w.edges} tools={w.tools} hoverId={w.hoverId} />}
 
       <AnimatePresence>
-        {w.tableOpen && !w.solved && w.view === "bench" && (
+        {w.tableOpen && w.view === "bench" && (
           <IndexTable catalog={w.catalog} activeId={w.activeId} solved={w.solved} />
         )}
       </AnimatePresence>
@@ -216,6 +217,12 @@ export default function App() {
 
       <div className="vignette" style={{ zIndex: 42 }} />
       <div className="grain" style={{ zIndex: 43 }} />
+
+      <AnimatePresence>
+        {w.solved && w.view === "bench" && !w.veiled && (
+          <CatalogueDoor key="catalogue-door" visits={w.visits} onEnter={w.enterSite} />
+        )}
+      </AnimatePresence>
 
       <Hud
         mode={w.mode}

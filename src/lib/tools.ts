@@ -1,15 +1,11 @@
 import type { Mode, ToolId, ToolState, VecN } from "../types";
 
-/* ------------------------------------------------------------------ */
-/*  The six tools                                                      */
-/* ------------------------------------------------------------------ */
-
 export interface ToolDef {
   id: ToolId;
   name: string;
   desc: string;
-  color: string; // accent
-  firstUse: string; // whispered the first time it leaves a mark
+  color: string; 
+  firstUse: string; 
 }
 
 export const TOOLS: Record<ToolId, ToolDef> = {
@@ -68,10 +64,6 @@ export const PARTNER: Record<ToolId, ToolId> = {
   clamp: "magnifier",
 };
 
-/* ------------------------------------------------------------------ */
-/*  Content the tools produce                                          */
-/* ------------------------------------------------------------------ */
-
 export const PEN_LINES = [
   "begin before you are ready.",
   "the surface remembers everything.",
@@ -103,7 +95,6 @@ export const GLASS_DETAILS = [
 
 export const BRUSH_COLORS = ["#c9876a", "#9aa786", "#7f96a8", "#af8a9d", "#c2a06e"];
 
-/* subsurface — only visible through the glass */
 export const SUBSURFACE: { x: number; y: number; t: string; r: number; secret?: boolean }[] = (() => {
   const words = [
     "oak, felled 1962", "R 0.4", "old varnish", "sanded twice", "north →",
@@ -125,10 +116,6 @@ export const SUBSURFACE: { x: number; y: number; t: string; r: number; secret?: 
   return res;
 })();
 
-/* ------------------------------------------------------------------ */
-/*  Mode language                                                      */
-/* ------------------------------------------------------------------ */
-
 export const MODE_META: Record<Mode, { label: string; poem: string }> = {
   empty: { label: "empty bench", poem: "nothing yet. search the dark." },
   assembly: { label: "assembly line", poem: "the bench found its order." },
@@ -136,10 +123,6 @@ export const MODE_META: Record<Mode, { label: string; poem: string }> = {
   drawers: { label: "drawers & compartments", poem: "what you love stays open." },
   remembered: { label: "remembered setup", poem: "you left, and it waited." },
 };
-
-/* ------------------------------------------------------------------ */
-/*  Geometry                                                           */
-/* ------------------------------------------------------------------ */
 
 export const RAIL_Y = 0.44;
 export const SLOT_A = 0.16;
@@ -168,7 +151,6 @@ export const seeded = (seed: number) => {
   return () => (s = (s * 16807) % 2147483647) / 2147483647;
 };
 
-/* deterministic, ever-recomputable cabinets when both foci matter */
 export const cabinetPos = (a: VecN, b: VecN): [VecN, VecN] => {
   const leftFirst = a.x <= b.x;
   let ax = clampN(a.x, leftFirst ? 0.2 : 0.54, leftFirst ? 0.46 : 0.8);
@@ -184,7 +166,6 @@ export const cabinetPos = (a: VecN, b: VecN): [VecN, VecN] => {
   ];
 };
 
-/* where everything sleeps before you've met it */
 export const START_POS: Record<ToolId, VecN> = {
   pen: { x: 0.5, y: 0.47 },
   knife: { x: 0.29, y: 0.4 },
@@ -212,10 +193,6 @@ export const freshTools = (): ToolState[] =>
     drawerSlot: 0,
   }));
 
-/* ------------------------------------------------------------------ */
-/*  The index — six sockets, one old order                             */
-/* ------------------------------------------------------------------ */
-
 export const TABLE_Y = 0.15;
 export const TABLE_GAP = 0.088;
 
@@ -228,7 +205,6 @@ export const KEY_ORDER: ToolId[] = ["ruler", "knife", "brush", "pen", "magnifier
 export const SOCKET_VERBS = ["measure", "cut", "mark", "write", "look", "hold"];
 export const ROMAN = ["I", "II", "III", "IV", "V", "VI"];
 
-/* ink accents for the catalogue (paper side) */
 export const ACCENT_INK: Record<ToolId, string> = {
   pen: "#9c7a3f",
   knife: "#5a6570",

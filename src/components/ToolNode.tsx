@@ -6,8 +6,8 @@ import ToolShape from "./ToolShape";
 interface Props {
   t: ToolState;
   hover: boolean;
-  suppressed: boolean; // currently in the hand — body hidden, socket shown elsewhere
-  small?: boolean; // tucked into a drawer
+  suppressed: boolean; 
+  small?: boolean; 
   left: string;
   top: string;
   release: Release | null;
@@ -31,16 +31,16 @@ export default function ToolNode({ t, hover, suppressed, small, left, top, relea
         pointerEvents: "none",
       }}
     >
-      {/* settle glide — runs once per put-down */}
+      {}
       <motion.div
         key={release ? release.k : 0}
         initial={release ? { x: release.dx, y: release.dy, scale: 1.06 } : false}
         animate={{ x: 0, y: 0, scale: 1 }}
         transition={{ type: "spring", stiffness: 105, damping: 15, mass: 0.9 }}
       >
-        {/* centered body */}
+        {}
         <div style={{ width: box, height: box, transform: "translate(-50%, -50%)", position: "relative" }}>
-          {/* floor shadow (plain wrapper positions it, framer animates the rest) */}
+          {}
           <div style={{ position: "absolute", left: "50%", top: "100%", transform: "translate(-50%, -2px)" }}>
             <motion.div
               animate={{
@@ -58,14 +58,14 @@ export default function ToolNode({ t, hover, suppressed, small, left, top, relea
             />
           </div>
 
-          {/* halo */}
+          {}
           <motion.div
             className="halo"
             animate={{ opacity: hover && !ghost ? 1 : 0, scale: hover ? 1.15 : 0.85 }}
             transition={{ duration: 0.5 }}
           />
 
-          {/* the tool — framer owns this transform entirely */}
+          {}
           <motion.div
             animate={{
               opacity: targetOpacity,
@@ -85,7 +85,7 @@ export default function ToolNode({ t, hover, suppressed, small, left, top, relea
             </div>
           </motion.div>
 
-          {/* label */}
+          {}
           <div
             className="absolute"
             style={{ top: box + 4, left: "50%", transform: "translateX(-50%)", width: 190, textAlign: "center" }}

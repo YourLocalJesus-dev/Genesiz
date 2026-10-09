@@ -10,8 +10,8 @@ import Overlays from "./components/Overlays";
 import Hud from "./components/HUD";
 import IndexTable from "./components/IndexTable";
 import CatalogSite from "./components/CatalogSite";
-import CatalogueDoor from "./components/CatalogueDoor";
 import DustMotes from "./components/DustMotes";
+import ReadmeModal from "./components/ReadmeModal";
 
 export default function App() {
   const w = useWorkshop();
@@ -19,11 +19,48 @@ export default function App() {
   const resting = w.tools.filter((t) => !t.tuckedInto || activeTool?.id === t.id);
 
   const [secretOpen, setSecretOpen] = useState(false);
+  const [readmeOpen, setReadmeOpen] = useState(false);
+
   useEffect(() => {
-    const handle = () => setSecretOpen(true);
+    const syncRoute = () => {
+      const p = window.location.pathname.replace(/\/+$/, "");
+      if (p === "/genesiz" || window.location.hash === "#genesiz") {
+        setSecretOpen(true);
+      }
+    };
+    syncRoute();
+    const handle = () => {
+      setSecretOpen(true);
+      if (window.location.pathname.replace(/\/+$/, "") !== "/genesiz") {
+        window.history.pushState(null, "", "/genesiz");
+      }
+    };
     window.addEventListener("open-secret", handle);
-    return () => window.removeEventListener("open-secret", handle);
+    window.addEventListener("popstate", syncRoute);
+    window.addEventListener("hashchange", syncRoute);
+    return () => {
+      window.removeEventListener("open-secret", handle);
+      window.removeEventListener("popstate", syncRoute);
+      window.removeEventListener("hashchange", syncRoute);
+    };
   }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && readmeOpen) {
+        setReadmeOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [readmeOpen]);
+
+  const closeSecret = () => {
+    setSecretOpen(false);
+    if (window.location.pathname.replace(/\/+$/, "") === "/genesiz") {
+      window.history.pushState(null, "", "/");
+    }
+  };
 
   if (secretOpen) {
     return (
@@ -35,7 +72,11 @@ export default function App() {
           data-native
           onPointerDown={(e) => {
             e.stopPropagation();
-            setSecretOpen(false);
+            closeSecret();
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            closeSecret();
           }}
           style={{ marginTop: 80, padding: "12px 24px", border: "1px solid rgba(226, 213, 193, 0.3)", borderRadius: 999, background: "none", color: "inherit", cursor: "pointer", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase" }}
         >
@@ -50,10 +91,8 @@ export default function App() {
       className="fixed inset-0 overflow-hidden select-none"
       style={{ background: "#0a0908", cursor: "none", touchAction: "none" }}
     >
-      {/* the bench itself */}
       <div className="bench-surface" style={{ zIndex: 0 }} />
 
-      {/* assembly rail */}
       {w.assemblyLike && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -87,20 +126,16 @@ export default function App() {
         </motion.div>
       )}
 
-      {/* glowing paths between tools */}
       {w.scatteredLike && <PathsLayer edges={w.edges} tools={w.tools} hoverId={w.hoverId} />}
 
-      {/* the index — six sockets, one old order */}
       <AnimatePresence>
-        {w.tableOpen && w.view === "bench" && (
+        {w.tableOpen && !w.solved && w.view === "bench" && (
           <IndexTable catalog={w.catalog} activeId={w.activeId} solved={w.solved} />
         )}
       </AnimatePresence>
 
-      {/* everything you've made so far */}
       <MarksLayer marks={w.marks} vw={w.vw} vh={w.vh} />
 
-      {/* drawers & compartments */}
       {w.drawersLike && (
         <Cabinets
           foci={w.focused}
@@ -111,7 +146,6 @@ export default function App() {
         />
       )}
 
-      {/* sockets — where the held tool lives */}
       {activeTool && (
         <div
           className="tool-pos"
@@ -137,7 +171,6 @@ export default function App() {
         </div>
       )}
 
-      {/* resting tools */}
       <div className="absolute inset-0" style={{ zIndex: 10, pointerEvents: "none" }}>
         {resting.map((t) => (
           <ToolNode
@@ -152,7 +185,6 @@ export default function App() {
         ))}
       </div>
 
-      {/* light, lens, hand, cursor */}
       <Overlays
         mx={w.mv.mx}
         my={w.mv.my}
@@ -169,10 +201,8 @@ export default function App() {
         veiled={w.veiled}
       />
 
-      {/* dust in the air */}
       <DustMotes />
 
-      {/* the bench rests when you do */}
       <motion.div
         animate={{ opacity: w.idle && w.view === "bench" ? 1 : 0 }}
         transition={{ duration: 2.4, ease: "easeInOut" }}
@@ -184,16 +214,8 @@ export default function App() {
         }}
       />
 
-      {/* atmosphere above everything */}
       <div className="vignette" style={{ zIndex: 42 }} />
       <div className="grain" style={{ zIndex: 43 }} />
-
-      {/* solved — the door to the catalogue */}
-      <AnimatePresence>
-        {w.solved && w.view === "bench" && !w.veiled && (
-          <CatalogueDoor key="catalogue-door" visits={w.visits} onEnter={w.enterSite} />
-        )}
-      </AnimatePresence>
 
       <Hud
         mode={w.mode}
@@ -207,9 +229,14 @@ export default function App() {
         indexOpen={w.tableOpen}
         indexFilled={w.indexFilled}
         indexSolved={w.solved}
+        onEnterCatalogue={w.enterSite}
+        onOpenReadme={() => setReadmeOpen(true)}
       />
 
-      {/* the catalogue — an entirely other website, issued by the bench */}
+      <AnimatePresence>
+        {readmeOpen && <ReadmeModal onClose={() => setReadmeOpen(false)} />}
+      </AnimatePresence>
+
       <AnimatePresence>
         {w.view === "site" && (
           <CatalogSite
@@ -225,7 +252,6 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* the first breath */}
       <AnimatePresence>
         {w.veiled && (
           <motion.div

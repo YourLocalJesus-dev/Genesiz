@@ -6,10 +6,6 @@ interface Props {
   hoverId: ToolId | null;
 }
 
-/*
- * viewBox is a 100x100 square stretched to the bench — positions are
- * normalized coordinates; strokes use non-scaling width.
- */
 export default function PathsLayer({ edges, tools, hoverId }: Props) {
   const byId = new Map(tools.map((t) => [t.id, t]));
   let curveIdx = 0;

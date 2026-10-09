@@ -14,13 +14,14 @@ interface Props {
   indexOpen: boolean;
   indexFilled: number;
   indexSolved: boolean;
+  onEnterCatalogue?: () => void;
+  onOpenReadme?: () => void;
 }
 
 export default function Hud(p: Props) {
   const meta = MODE_META[p.mode];
   return (
     <>
-      {/* brand + state */}
       <div className="absolute left-7 bottom-7 z-50" style={{ pointerEvents: "none" }}>
         <div className="f-serif italic" style={{ fontSize: 17, color: "rgba(226, 213, 192, 0.85)", letterSpacing: "0.02em" }}>
           the workshop
@@ -46,11 +47,10 @@ export default function Hud(p: Props) {
           style={{ fontSize: 8.5, color: "rgba(141, 132, 120, 0.42)", letterSpacing: "0.18em", marginTop: 10 }}
         >
           {p.found}/6 tools · {p.marks} marks · visit {p.visits}
-          {p.indexOpen ? ` · index ${p.indexSolved ? "open" : `${p.indexFilled}/6`}` : ""}
+          {p.indexOpen && !p.indexSolved ? ` · index ${p.indexFilled}/6` : ""}
         </div>
       </div>
 
-      {/* whispered hint */}
       <div className="absolute left-0 right-0 bottom-9 z-50" style={{ pointerEvents: "none", textAlign: "center" }}>
         <AnimatePresence mode="wait">
           {p.hint && (
@@ -69,8 +69,58 @@ export default function Hud(p: Props) {
         </AnimatePresence>
       </div>
 
-      {/* the only controls that exist */}
-      <div className="absolute right-7 bottom-7 z-50 flex gap-5">
+      <div className="absolute right-7 bottom-7 z-50 flex items-center gap-5">
+        {p.indexSolved && p.onEnterCatalogue && (
+          <button
+            data-native
+            onClick={p.onEnterCatalogue}
+            className="f-mono"
+            style={{
+              fontSize: 9,
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "rgba(226, 205, 168, 0.9)",
+              background: "none",
+              border: "1px solid rgba(226, 205, 168, 0.35)",
+              borderRadius: 999,
+              cursor: "pointer",
+              padding: "4px 12px",
+              transition: "all 0.4s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "#ffdcab";
+              e.currentTarget.style.borderColor = "rgba(255, 220, 171, 0.7)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "rgba(226, 205, 168, 0.9)";
+              e.currentTarget.style.borderColor = "rgba(226, 205, 168, 0.35)";
+            }}
+          >
+            the catalogue →
+          </button>
+        )}
+        {p.onOpenReadme && (
+          <button
+            data-native
+            onClick={p.onOpenReadme}
+            className="f-mono"
+            style={{
+              fontSize: 9,
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "rgba(164, 152, 133, 0.55)",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: 4,
+              transition: "color 0.4s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(226, 205, 168, 0.9)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(164, 152, 133, 0.55)")}
+          >
+            readme.md
+          </button>
+        )}
         <button
           data-native
           onClick={p.onToggleMute}

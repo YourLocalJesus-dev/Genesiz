@@ -15,7 +15,6 @@ html, body {
 .f-serif { font-family: "Cormorant Garamond", Georgia, serif; }
 .f-mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
 
-/* ---------- bench surface ---------- */
 .bench-surface {
   position: absolute; inset: 0;
   background:
@@ -45,7 +44,6 @@ html, body {
   100% { transform: translate(0, 0); }
 }
 
-/* ---------- movement ---------- */
 .tool-pos {
   position: absolute;
   transition:
@@ -70,7 +68,6 @@ html, body {
   transition: opacity 2.4s ease;
 }
 
-/* clamp fixture pulse */
 .clamp-pulse {
   animation: clamp-pulse 5.5s ease-out infinite;
   transform-origin: center;
@@ -81,7 +78,6 @@ html, body {
   100% { transform: scale(2.1); opacity: 0; }
 }
 
-/* glowing path drift */
 .path-drift {
   stroke-dasharray: 2.2 4.5;
   animation: path-drift 26s linear infinite;
@@ -90,20 +86,17 @@ html, body {
   to { stroke-dashoffset: -134; }
 }
 
-/* tool glow halo */
 .halo {
   position: absolute; inset: -26px; border-radius: 9999px; pointer-events: none;
   background: radial-gradient(circle, rgba(var(--warm-light), 0.16), transparent 68%);
 }
 
-/* engraved rail line in assembly mode */
 .rail-line {
   position: absolute; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(210, 185, 145, 0.22) 12%, rgba(210, 185, 145, 0.22) 88%, transparent);
   box-shadow: 0 1px 0 rgba(255, 220, 170, 0.05);
 }
 
-/* hint whisper */
 .whisper { animation: whisper 0.9s ease both; }
 @keyframes whisper {
   from { opacity: 0; transform: translateY(8px); filter: blur(3px); }
@@ -112,7 +105,6 @@ html, body {
 
 ::selection { background: rgba(255, 205, 150, 0.2); }
 
-/* ---------- the catalogue (paper side) ---------- */
 .cat-scroll::-webkit-scrollbar { width: 10px; }
 .cat-scroll::-webkit-scrollbar-track { background: #efe7d3; }
 .cat-scroll::-webkit-scrollbar-thumb {
@@ -140,7 +132,6 @@ html, body {
   .cat-two { grid-template-columns: 1fr !important; gap: 42px !important; }
 }
 
-/* ---------- dust ---------- */
 .mote {
   position: absolute;
   border-radius: 999px;

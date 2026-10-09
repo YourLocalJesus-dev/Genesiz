@@ -5,25 +5,25 @@ export type SectionId = "order" | "specimens" | "notes" | "pattern" | "ledger";
 
 export interface Lens {
   key: string;
-  title: string; // what this arrangement of the catalogue is called
+  title: string; 
   blurb: string;
   paper: string;
   ink: string;
   hair: string;
   dim: string;
   accent: string;
-  tint: string; // page wash
-  measure: number; // content width
+  tint: string; 
+  measure: number; 
   heroSize: number;
   heroItalic: boolean;
   variant: SpecimenVariant;
-  cols: number; // specimen columns
+  cols: number; 
   notesCols: number;
-  gap: number; // vertical rhythm multiplier
+  gap: number; 
   order: SectionId[];
-  mono: boolean; // mono-first body type
-  rails: boolean; // measurement rails down the page
-  framed: boolean; // compartment frames
+  mono: boolean; 
+  rails: boolean; 
+  framed: boolean; 
 }
 
 const BASE: Lens = {
@@ -50,7 +50,7 @@ const BASE: Lens = {
 };
 
 export const LENSES: Record<ToolId, Lens> = {
-  /* a narrow reading column — the catalogue as manuscript */
+  
   pen: {
     ...BASE,
     key: "pen",
@@ -71,7 +71,6 @@ export const LENSES: Record<ToolId, Lens> = {
     order: ["notes", "specimens", "order", "ledger", "pattern"],
   },
 
-  /* stripped to the bone — only what survived the cut */
   knife: {
     ...BASE,
     key: "knife",
@@ -94,7 +93,6 @@ export const LENSES: Record<ToolId, Lens> = {
     mono: true,
   },
 
-  /* loose, washed, colour first */
   brush: {
     ...BASE,
     key: "brush",
@@ -115,7 +113,6 @@ export const LENSES: Record<ToolId, Lens> = {
     order: ["notes", "specimens", "pattern", "order", "ledger"],
   },
 
-  /* a measured plate — strict grid, rails, numbers */
   ruler: {
     ...BASE,
     key: "ruler",
@@ -139,7 +136,6 @@ export const LENSES: Record<ToolId, Lens> = {
     rails: true,
   },
 
-  /* enlarged and annotated — detail over summary */
   magnifier: {
     ...BASE,
     key: "magnifier",
@@ -160,7 +156,6 @@ export const LENSES: Record<ToolId, Lens> = {
     order: ["notes", "ledger", "specimens", "order", "pattern"],
   },
 
-  /* boxed compartments — nothing is allowed to drift */
   clamp: {
     ...BASE,
     key: "clamp",

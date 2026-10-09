@@ -33,7 +33,7 @@ export default function Cabinets({ foci, tools, open, activeId, hoverId }: Props
               pointerEvents: "none",
             }}
           >
-            {/* slab */}
+            
             <div
               style={{
                 position: "relative",
@@ -54,7 +54,7 @@ export default function Cabinets({ foci, tools, open, activeId, hoverId }: Props
                   border: "1px solid rgba(255, 214, 160, 0.05)",
                 }}
               />
-              {/* etched label */}
+              
               <div
                 className="f-mono"
                 style={{
@@ -80,7 +80,7 @@ export default function Cabinets({ foci, tools, open, activeId, hoverId }: Props
                 }}
               />
             </div>
-            {/* drawer */}
+            
             <motion.div
               animate={{ height: isOpen ? DRAWER_H + 10 : 0, opacity: isOpen ? 1 : 0 }}
               transition={{ type: "spring", stiffness: 120, damping: 17 }}
@@ -100,7 +100,7 @@ export default function Cabinets({ foci, tools, open, activeId, hoverId }: Props
                   boxShadow: "inset 0 8px 16px rgba(0,0,0,0.6), 0 14px 26px rgba(0,0,0,0.45)",
                 }}
               />
-              {/* tiny brass pull */}
+              
               <div
                 style={{
                   position: "absolute",

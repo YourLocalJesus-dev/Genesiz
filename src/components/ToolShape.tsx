@@ -1,10 +1,6 @@
 import type { ToolId } from "../types";
 import { ACCENT_INK, TOOLS } from "../lib/tools";
 
-/*
- * The tools, drawn as quiet line-work. One warm stroke, one accent.
- * ink=true re-inks them for the catalogue's paper side.
- */
 export default function ToolShape({ id, size = 42, ink = false }: { id: ToolId; size?: number; ink?: boolean }) {
   const stroke = ink ? "#3b3125" : "#d9d0c3";
   const accent = ink ? ACCENT_INK[id] : TOOLS[id].color;

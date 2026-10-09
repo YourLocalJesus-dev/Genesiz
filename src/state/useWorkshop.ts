@@ -63,7 +63,7 @@ function loadStored(): Stored | null {
 }
 
 export function useWorkshop() {
-  /* ---------------- persistent shell ---------------- */
+  
   const stored = useMemo(loadStored, []);
   const visits = useMemo(() => (stored ? stored.visits + 1 : 1), [stored]);
 
@@ -82,11 +82,9 @@ export function useWorkshop() {
   const tracker = trackerRef.current;
   const sound = soundRef.current;
 
-  /* ---------------- viewport ---------------- */
   const [vp, setVp] = useState({ vw: window.innerWidth, vh: window.innerHeight });
   const { vw, vh } = vp;
 
-  /* ---------------- core state ---------------- */
   const [tools, setTools] = useState<ToolState[]>(() => {
     if (!stored) return freshTools();
     return TOOL_IDS.map((id) => {
@@ -128,7 +126,6 @@ export function useWorkshop() {
   const [nativeHover, setNativeHover] = useState(false);
   const [idle, setIdle] = useState(false);
 
-  /* ---------------- motion values ---------------- */
   const mx = useMotionValue(vw / 2);
   const my = useMotionValue(vh / 2);
   const sx = useSpring(mx, { stiffness: 520, damping: 42 });
@@ -140,7 +137,6 @@ export function useWorkshop() {
   const rotTarget = useMotionValue(0);
   const rot = useSpring(rotTarget, { stiffness: 110, damping: 13 });
 
-  /* ---------------- refs ---------------- */
   const releasesRef = useRef<Record<string, Release>>({});
   const releaseK = useRef(0);
   const counters = useRef<Record<ToolId, number>>({
@@ -167,7 +163,6 @@ export function useWorkshop() {
   const flags = useRef<Record<string, boolean>>({});
   const lastWrong = useRef(0);
 
-  /* ---------------- derived ---------------- */
   const assemblyLike = mode === "assembly" || (mode === "remembered" && base === "assembly");
   const scatteredLike = mode === "scattered" || (mode === "remembered" && base === "scattered");
   const drawersLike = mode === "drawers" || (mode === "remembered" && base === "drawers");
@@ -175,7 +170,6 @@ export function useWorkshop() {
   const tableOpen = found === 6;
   const indexFilled = catalog.filter(Boolean).length;
 
-  /* ---------------- helpers ---------------- */
   const pct = (x: number, y: number): VecN => ({
     x: clampN(x / Math.max(vw, 1), 0.02, 0.98),
     y: clampN(y / Math.max(vh, 1), 0.02, 0.98),
@@ -211,7 +205,6 @@ export function useWorkshop() {
     whisper(text, holdMs);
   };
 
-  /* the index closes in the right order — the bench opens */
   const solve = () => {
     setSolved(true);
     sound.solveChord();
@@ -233,7 +226,6 @@ export function useWorkshop() {
     setView("bench");
   };
 
-  /* px positions of everything that can be picked up right now */
   const pickables = (ts: ToolState[]): { id: ToolId; px: number; py: number; r: number }[] => {
     const out: { id: ToolId; px: number; py: number; r: number }[] = [];
     ts.forEach((t) => {
@@ -268,7 +260,6 @@ export function useWorkshop() {
     return null;
   };
 
-  /* ---------------- evolution ---------------- */
   const applyParadigm = (p: Paradigm, ts: ToolState[], foci?: [ToolId, ToolId]): ToolState[] => {
     if (p === "assembly") {
       const so = slotOrder(ts);
@@ -382,10 +373,9 @@ export function useWorkshop() {
   useEffect(() => {
     const t = window.setInterval(() => maybeEvolveRef.current(), 4000);
     return () => window.clearInterval(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
 
-  /* the bench rests when you do */
   useEffect(() => {
     const t = window.setInterval(() => {
       const last = lastMove.current?.t ?? 0;
@@ -399,7 +389,6 @@ export function useWorkshop() {
     return () => window.clearInterval(t);
   }, [veiled]);
 
-  /* the index surfaces once every tool has been found */
   useEffect(() => {
     if (tableOpen && !flags.current["table-open"]) {
       flags.current["table-open"] = true;
@@ -408,10 +397,9 @@ export function useWorkshop() {
         1600,
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [tableOpen]);
 
-  /* ---------------- acts ---------------- */
   const putdown = (id: ToolId, at: VecN, silent = false) => {
     const now = performance.now();
     const dwell = now - activatedAt.current;
@@ -421,7 +409,6 @@ export function useWorkshop() {
     let target = at;
     let rotV = clampN(rotTarget.get(), -8, 8);
 
-    /* the index table claims whatever is offered to it */
     let seatedHere = false;
     const soc = tableOpen ? socketHit(mx.get(), my.get()) : -1;
     if (soc >= 0) {
@@ -433,7 +420,7 @@ export function useWorkshop() {
       const cur = nc.indexOf(id);
       if (cur >= 0) nc[cur] = null;
       if (occ && occ !== id) {
-        // the previous tenant is set gently below the table
+        
         releasesRef.current[occ] = { k: ++releaseK.current, dx: 0, dy: -0.115 * vh };
         const outPos = { x: SOCKETS[soc].x, y: SOCKETS[soc].y + 0.115 };
         setTools((ts) => ts.map((t) => (t.id === occ ? { ...t, pos: outPos, rot: START_ROT[occ] * 0.6 } : t)));

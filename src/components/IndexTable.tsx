@@ -8,10 +8,6 @@ interface Props {
   solved: boolean;
 }
 
-/*
- * Six etched sockets across the top of the bench.
- * Each names a step of craft, not a tool — the mapping is yours to find.
- */
 export default function IndexTable({ catalog, activeId, solved }: Props) {
   return (
     <motion.div
@@ -22,7 +18,7 @@ export default function IndexTable({ catalog, activeId, solved }: Props) {
       className="absolute"
       style={{ left: 0, right: 0, top: 0, bottom: 0, zIndex: 5, pointerEvents: "none" }}
     >
-      {/* etched plate */}
+      {}
       <div
         style={{
           position: "absolute",

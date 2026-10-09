@@ -6,32 +6,32 @@ export type Mode = Paradigm | "remembered";
 export type Visibility = "hidden" | "ghost" | "idle";
 
 export interface VecN {
-  x: number; // normalized 0..1
+  x: number; 
   y: number;
 }
 
 export interface ToolState {
   id: ToolId;
   pos: VecN;
-  rot: number; // resting rotation, degrees
+  rot: number; 
   vis: Visibility;
   usage: number;
   dwellMs: number;
-  remembered: boolean; // arrived from a previous visit
-  greeted: boolean; // recognition chime already played this session
-  tuckedInto: ToolId | null; // drawers mode: which cabinet holds it
-  drawerSlot: number; // slot index inside the drawer
+  remembered: boolean; 
+  greeted: boolean; 
+  tuckedInto: ToolId | null; 
+  drawerSlot: number; 
 }
 
 export interface Mark {
   id: number;
   type: ToolId;
-  x: number; // normalized
+  x: number; 
   y: number;
-  rot: number; // degrees
-  idx: number; // content index
-  w: number; // optional size (ruler width, brush blob)
-  born: number; // timestamp ms
+  rot: number; 
+  idx: number; 
+  w: number; 
+  born: number; 
 }
 
 export interface Release {

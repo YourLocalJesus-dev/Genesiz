@@ -1,9 +1,5 @@
 import type { ToolId } from "../types";
 
-/*
- * The whole sound world of the bench is synthesized — no samples.
- * Everything is quiet on purpose. Master sits well under 1.0.
- */
 export class SoundEngine {
   muted = false;
   private ctx: AudioContext | null = null;
@@ -43,11 +39,10 @@ export class SoundEngine {
       this.master.gain.setTargetAtTime(m ? 0 : 0.85, this.ctx.currentTime, 0.15);
   }
 
-  /* ------- faint workshop air ------- */
   private roomTone() {
     const ctx = this.ctx!;
     const m = this.master!;
-    // brown-ish noise loop
+    
     const len = 4 * ctx.sampleRate;
     const buf = ctx.createBuffer(1, len, ctx.sampleRate);
     const d = buf.getChannelData(0);
@@ -76,7 +71,7 @@ export class SoundEngine {
     g.connect(m);
     src.start();
     lfo.start();
-    // high air
+    
     const air = ctx.createBufferSource();
     air.buffer = this.noise!;
     air.loop = true;
@@ -149,7 +144,6 @@ export class SoundEngine {
     o.stop(t0 + dur + 0.05);
   }
 
-  /* hand moving across empty grain */
   scrape(v: number) {
     const t = performance.now();
     if (t - this.lastScrape < 110) return;
@@ -158,7 +152,6 @@ export class SoundEngine {
     this.burst("bandpass", 380 + cl * 0.32, 1.2, Math.min(0.02, 0.004 + cl * 0.0000045), 0.16);
   }
 
-  /* a tool lifting / landing */
   click(tool: ToolId | null, soft = false) {
     const k = soft ? 0.6 : 1;
     if (tool === "knife" || tool === "clamp") {
@@ -173,7 +166,6 @@ export class SoundEngine {
     }
   }
 
-  /* something faint found in the dark */
   reveal() {
     this.burst("bandpass", 3200, 3, 0.024, 0.12, 2200);
     this.tone("sine", 1320, 0.012, 0.4, 0.02);
@@ -187,7 +179,6 @@ export class SoundEngine {
     this.burst("bandpass", 520, 1.6, 0.045, 0.5, 240);
   }
 
-  /* layout restructuring — tools landing in new places */
   settleSeq(n: number, drawers: boolean) {
     for (let i = 0; i < n; i++) {
       const d = i * (drawers ? 0.15 : 0.1) + Math.random() * 0.03;
@@ -205,7 +196,6 @@ export class SoundEngine {
     if (drawers) this.drawerSlide();
   }
 
-  /* the index closes — the bench opens */
   solveChord() {
     const notes = [146.83, 293.66, 369.99, 440, 587.33, 739.99];
     notes.forEach((n, i) => {
@@ -215,20 +205,17 @@ export class SoundEngine {
     this.burst("bandpass", 2400, 2, 0.02, 0.8, 1200, 0.4);
   }
 
-  /* paper sliding — entering or leaving the catalogue */
   pageTurn() {
     this.burst("bandpass", 1900, 0.8, 0.032, 0.42, 520);
     this.burst("bandpass", 900, 0.9, 0.018, 0.3, 1500, 0.18);
   }
 
-  /* quiet recognition — a remembered tool says hello */
   chime() {
     this.tone("sine", 587.33, 0.026, 1.4, 0);
     this.tone("sine", 880, 0.019, 1.6, 0.09);
     this.tone("sine", 1174.66, 0.011, 1.2, 0.18);
   }
 
-  /* per-mark small voices */
   markVoice(tool: ToolId) {
     switch (tool) {
       case "pen":
@@ -254,7 +241,6 @@ export class SoundEngine {
     }
   }
 
-  /* ------- sustained material sound while lingering ------- */
   materialStart(tool: ToolId) {
     this.materialStop();
     const ctx = this.ctx;
@@ -381,13 +367,13 @@ export class SoundEngine {
             try {
               n.stop();
             } catch {
-              /* already stopped */
+              
             }
           });
           g.disconnect();
         }, 700);
       } catch {
-        /* closed ctx */
+        
       }
     };
   }

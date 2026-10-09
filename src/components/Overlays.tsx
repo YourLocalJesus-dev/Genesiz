@@ -6,12 +6,12 @@ import ToolShape from "./ToolShape";
 interface Props {
   mx: MotionValue<number>;
   my: MotionValue<number>;
-  sx: MotionValue<number>; // held-tool spring
+  sx: MotionValue<number>;
   sy: MotionValue<number>;
-  lx: MotionValue<number>; // light spring
+  lx: MotionValue<number>;
   ly: MotionValue<number>;
-  ls: MotionValue<number>; // light scale
-  rot: MotionValue<number>; // held-tool tilt
+  ls: MotionValue<number>;
+  rot: MotionValue<number>;
   activeId: ToolId | null;
   hoverId: ToolId | null;
   nativeHover: boolean;
@@ -27,9 +27,20 @@ export default function Overlays(p: Props) {
   const dotT = useMotionTemplate`translate3d(${p.mx}px, ${p.my}px, 0) translate(-50%, -50%)`;
   const activeDef = p.activeId ? TOOLS[p.activeId] : null;
 
+  const handleSecretClick = (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+    if ("nativeEvent" in e && e.nativeEvent) {
+      (e.nativeEvent as Event).stopImmediatePropagation?.();
+      (e.nativeEvent as Event).stopPropagation?.();
+    }
+    if (window.location.pathname.replace(/\/+$/, "") !== "/genesiz") {
+      window.history.pushState(null, "", "/genesiz");
+    }
+    window.dispatchEvent(new CustomEvent("open-secret"));
+  };
+
   return (
     <>
-      {/* ---------- warm pool of attention ---------- */}
       <motion.div
         style={{ transform: wideT, position: "fixed", left: 0, top: 0, zIndex: 24, pointerEvents: "none", mixBlendMode: "screen" }}
       >
@@ -68,7 +79,6 @@ export default function Overlays(p: Props) {
         />
       </motion.div>
 
-      {/* ---------- the subsurface, only through the glass ---------- */}
       {p.activeId === "magnifier" && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -89,28 +99,31 @@ export default function Overlays(p: Props) {
               className="f-mono"
               data-native={s.secret ? "true" : undefined}
               onPointerDown={(e) => {
-                if (s.secret) {
-                  e.stopPropagation();
-                  window.dispatchEvent(new CustomEvent("open-secret"));
-                }
+                if (s.secret) handleSecretClick(e);
+              }}
+              onClick={(e) => {
+                if (s.secret) handleSecretClick(e);
               }}
               style={{
                 position: "absolute",
                 left: `${s.x * 100}%`,
                 top: `${s.y * 100}%`,
                 transform: `translate(-50%,-50%) rotate(${s.r}deg)`,
-                fontSize: 8.5,
+                fontSize: s.secret ? 11 : 8.5,
+                padding: s.secret ? "16px 24px" : undefined,
+                margin: s.secret ? "-16px -24px" : undefined,
                 letterSpacing: "0.1em",
                 whiteSpace: "nowrap",
-                color: s.secret ? "rgba(255, 214, 160, 0.85)" : "rgba(168, 205, 198, 0.55)",
+                color: s.secret ? "rgba(255, 214, 160, 0.95)" : "rgba(168, 205, 198, 0.55)",
                 pointerEvents: s.secret ? "auto" : "none",
-                cursor: s.secret ? "pointer" : "default"
+                cursor: s.secret ? "pointer" : "default",
+                zIndex: s.secret ? 999 : undefined,
+                userSelect: "none",
               }}
             >
               {s.t}
             </div>
           ))}
-          {/* lens rim */}
           <motion.div
             style={{
               transform: dotT,
@@ -122,12 +135,12 @@ export default function Overlays(p: Props) {
               borderRadius: 999,
               border: "1px solid rgba(168, 205, 198, 0.30)",
               boxShadow: "inset 0 0 40px rgba(168, 205, 198, 0.05)",
+              pointerEvents: "none",
             }}
           />
         </motion.div>
       )}
 
-      {/* ---------- preview pulse: a mark is about to happen ---------- */}
       {p.preview && activeDef && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -161,7 +174,6 @@ export default function Overlays(p: Props) {
         </motion.div>
       )}
 
-      {/* ---------- the tool in your hand ---------- */}
       {activeDef && (
         <motion.div style={{ transform: heldT, position: "fixed", left: 0, top: 0, zIndex: 30, pointerEvents: "none" }}>
           <motion.div
@@ -196,7 +208,6 @@ export default function Overlays(p: Props) {
         </motion.div>
       )}
 
-      {/* shadow the held tool casts on the bench */}
       {activeDef && (
         <motion.div
           style={{ transform: ringT, position: "fixed", left: 0, top: 30, zIndex: 29, pointerEvents: "none" }}
@@ -215,7 +226,6 @@ export default function Overlays(p: Props) {
         </motion.div>
       )}
 
-      {/* ---------- custom cursor ---------- */}
       {!p.activeId && (
         <>
           <motion.div

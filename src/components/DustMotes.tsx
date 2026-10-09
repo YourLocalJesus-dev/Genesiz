@@ -1,10 +1,6 @@
 import { useMemo } from "react";
 import { seeded } from "../lib/tools";
 
-/*
- * Slow dust in the air above the bench. Only really visible
- * where the warm light falls — screen blend does the rest.
- */
 export default function DustMotes({ count = 26 }: { count?: number }) {
   const motes = useMemo(() => {
     const rnd = seeded(20260413);

@@ -1,21 +1,6 @@
 import type { Mode, Paradigm, ToolId } from "../types";
 import { PARTNER, TOOL_IDS } from "../lib/tools";
 
-/*
- * Locked scoring rules.
- *
- * Signals, sampled on real interactions only:
- *   dt        seconds since previous tool event
- *   jump      px between consecutive tool events
- *   direct    displacement / path-length since the last event (1 = a straight line)
- *   recent    distinct tools among the last 6 activations
- *   dwell     ms spent hovering / holding a tool
- *
- * Assembly line  ← slow pace, straight direct movement, small working set
- * Scattered paths← fast switching, long jumps, wandering paths, wide working set
- * Drawers        ← long dwell, returning to the same tool again and again
- */
-
 const MIN_EVENTS = 12;
 const MIN_TIME_MS = 45_000;
 const COOLDOWN_MS = 40_000;
@@ -77,19 +62,16 @@ export class Tracker {
     const recentUnique = new Set(this.activations.slice(-6)).size;
     const allUnique = new Set(this.activations.map((a) => a.id)).size;
 
-    // scattered paths
     if (dt < 1.5) this.scores.scattered += 2;
     if (jump > 320) this.scores.scattered += 1.5;
     if (direct < 0.35 && jump > 200) this.scores.scattered += 1;
     if (recentUnique >= 4) this.scores.scattered += 2;
 
-    // assembly line
     if (dt > 3) this.scores.assembly += 2;
     else if (dt > 1.8) this.scores.assembly += 1;
     if (direct > 0.55) this.scores.assembly += 2;
     if (!same && recentUnique <= 3 && this.activations.length >= 4) this.scores.assembly += 1;
 
-    // drawers & compartments
     if (same) this.scores.drawers += 2;
     if (allUnique === 1 && this.activations.length >= 4) this.scores.drawers += 2;
 
@@ -109,7 +91,6 @@ export class Tracker {
     else if (ms > 1500) this.scores.assembly += 1;
   }
 
-  /* the two tools you love most (dwell + use), within an allowed pool */
   focusedPair(usage: Record<ToolId, number>, allowed?: ToolId[]): [ToolId, ToolId] {
     const pool = allowed && allowed.length >= 2 ? allowed : TOOL_IDS;
     const score = (id: ToolId) => this.dwell[id] + (usage[id] ?? 0) * 1600;

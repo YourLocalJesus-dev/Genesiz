@@ -1,10 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 
-/*
- * Not a button — a brass plate screwed into the bench.
- * Thin rules run out from it into the dark on both sides.
- */
 export default function CatalogueDoor({ visits, onEnter }: { visits: number; onEnter: () => void }) {
   const [hot, setHot] = useState(false);
 
@@ -25,7 +21,7 @@ export default function CatalogueDoor({ visits, onEnter }: { visits: number; onE
         gap: 0,
       }}
     >
-      {/* rule, running left */}
+      {}
       <motion.div
         animate={{ opacity: hot ? 0.55 : 0.22, width: hot ? 150 : 110 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
@@ -63,7 +59,7 @@ export default function CatalogueDoor({ visits, onEnter }: { visits: number; onE
           cursor: "pointer",
         }}
       >
-        {/* corner screws */}
+        {}
         {[
           { l: 6, t: 6 },
           { l: "calc(100% - 9px)", t: 6 },
@@ -84,7 +80,7 @@ export default function CatalogueDoor({ visits, onEnter }: { visits: number; onE
           />
         ))}
 
-        {/* wax seal */}
+        {}
         <span style={{ position: "relative", width: 22, height: 22, flex: "0 0 22px" }}>
           <motion.span
             animate={{ scale: hot ? [1, 1.7] : 1, opacity: hot ? [0.5, 0] : 0 }}
@@ -156,7 +152,7 @@ export default function CatalogueDoor({ visits, onEnter }: { visits: number; onE
         </motion.span>
       </motion.button>
 
-      {/* rule, running right */}
+      {}
       <motion.div
         animate={{ opacity: hot ? 0.55 : 0.22, width: hot ? 150 : 110 }}
         transition={{ duration: 0.6, ease: "easeOut" }}

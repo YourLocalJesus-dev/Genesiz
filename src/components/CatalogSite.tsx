@@ -49,7 +49,6 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
     document.getElementById("cat-container")?.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  /* ---------- harvested from your session ---------- */
   const penLines = marks.filter((m) => m.type === "pen").map((m) => PEN_LINES[m.idx % PEN_LINES.length]);
   const knifeWords = marks.filter((m) => m.type === "knife").map((m) => KNIFE_WORDS[m.idx % KNIFE_WORDS.length]);
   const glassNotes = marks.filter((m) => m.type === "magnifier").map((m) => GLASS_DETAILS[m.idx % GLASS_DETAILS.length]);
@@ -200,7 +199,12 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
                   <span style={{ color: L.accent }}>†</span>
                   <button
                     data-native
-                    onClick={() => window.dispatchEvent(new CustomEvent("open-secret"))}
+                    onClick={() => {
+                      if (window.location.pathname.replace(/\/+$/, "") !== "/genesiz") {
+                        window.history.pushState(null, "", "/genesiz");
+                      }
+                      window.dispatchEvent(new CustomEvent("open-secret"));
+                    }}
                     style={{ background: "none", border: "none", padding: 0, color: L.accent, cursor: "pointer", font: "inherit", opacity: 0.8 }}
                   >
                     /genesiz
@@ -375,7 +379,6 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
       <div style={{ position: "fixed", inset: 0, pointerEvents: "none", background: L.tint, transition: "background 0.9s ease" }} />
       <div style={{ position: "fixed", inset: 0, pointerEvents: "none", opacity: 0.05, backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E\")" }} />
 
-      {/* measurement rails, only under the ruler */}
       {L.rails && (
         <div style={{ position: "fixed", inset: 0, pointerEvents: "none", opacity: 0.5 }}>
           <div style={{ position: "absolute", top: 0, bottom: 0, left: `calc(50% - ${L.measure / 2}px)`, width: 1, background: L.hair }} />
@@ -384,7 +387,6 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
         </div>
       )}
 
-      {/* ---------- masthead ---------- */}
       <header style={{ position: "sticky", top: 0, zIndex: 5, background: `${L.paper}ee`, backdropFilter: "blur(8px)", borderBottom: `1px solid ${L.ink}`, transition: "background 0.9s ease" }}>
         <div style={{ maxWidth: L.measure, margin: "0 auto", padding: "15px 36px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 18, transition: "max-width 0.7s ease" }}>
           <div className="f-mono" style={{ fontSize: 9.5, letterSpacing: "0.3em", textTransform: "uppercase", whiteSpace: "nowrap" }}>
@@ -398,7 +400,8 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
                   const el = document.getElementById(`cat-${s}`);
                   const container = document.getElementById("cat-container");
                   if (el && container) {
-                    container.scrollTo({ top: el.offsetTop - 80, behavior: "smooth" });
+                    const top = el.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop - 70;
+                    container.scrollTo({ top, behavior: "smooth" });
                   }
                 }}
                 className="cat-link"
@@ -412,7 +415,6 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
             </button>
           </nav>
         </div>
-        {/* lens bar */}
         <AnimatePresence>
           {lensId && (
             <motion.div
@@ -438,8 +440,8 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
         </AnimatePresence>
       </header>
 
-      <div style={{ maxWidth: L.measure, margin: "0 auto", padding: "0 36px 90px", position: "relative", transition: "max-width 0.7s ease" }}>
-        {/* ---------- hero ---------- */}
+      <div style={{ maxWidth: L.measure, margin: "0 auto", padding: "0 36px 140px", position: "relative", transition: "max-width 0.7s ease" }}>
+        
         <section style={{ padding: `${S(70)}px 0 ${S(52)}px` }}>
           <div className="f-mono" style={{ fontSize: 9.5, letterSpacing: "0.28em", textTransform: "uppercase", color: L.dim }}>
             Issued by the bench · {date}
@@ -485,7 +487,6 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
 
         <div style={{ height: 1, background: L.hair }} />
 
-        {/* sections, in this lens's own order */}
         {L.order.map((s) => SECTIONS[s])}
 
         <div style={{ height: 1, background: L.hair }} />

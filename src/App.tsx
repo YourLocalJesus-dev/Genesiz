@@ -263,43 +263,36 @@ export default function App() {
         {w.veiled && (
           <motion.div
             initial={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 1.6, ease: "easeInOut" } }}
-            className="absolute inset-0"
-            style={{ zIndex: 60, background: "rgba(7, 6, 5, 0.96)", pointerEvents: "none" }}
+            exit={{ opacity: 0, transition: { duration: 1.2, ease: "easeInOut" } }}
+            className="absolute inset-0 cursor-pointer"
+            style={{ zIndex: 60, background: "rgba(7, 6, 5, 0.94)" }}
+            onClick={w.unveil}
+            onPointerDown={w.unveil}
           >
-            <div className="absolute left-1/2 top-1/2" style={{ transform: "translate(-50%, -50%)", textAlign: "center" }}>
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center px-4 w-full max-w-lg select-none">
               <motion.div
                 initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ duration: 1.8, delay: 0.4, ease: "easeOut" }}
-                className="f-serif italic"
-                style={{ fontSize: 40, color: "rgba(232, 219, 197, 0.92)", letterSpacing: "0.01em" }}
+                transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+                className="f-serif italic text-3xl sm:text-[40px] text-[rgba(232,219,197,0.92)] tracking-[0.01em]"
               >
                 the workshop
               </motion.div>
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 1.4, delay: 1.4 }}
-                className="f-mono"
-                style={{
-                  fontSize: 9.5,
-                  color: "rgba(164, 152, 133, 0.6)",
-                  letterSpacing: "0.3em",
-                  textTransform: "uppercase",
-                  marginTop: 16,
-                }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="f-mono text-[9px] sm:text-[9.5px] text-[rgba(164,152,133,0.6)] tracking-[0.25em] sm:tracking-[0.3em] uppercase mt-3 sm:mt-4"
               >
                 a quiet bench that arranges itself around how you work
               </motion.div>
               <motion.div
                 initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.75, 0.3, 0.75] }}
-                transition={{ duration: 3.6, delay: 2.6, repeat: Infinity, repeatType: "mirror" }}
-                className="f-serif italic"
-                style={{ fontSize: 14, color: "rgba(205, 178, 135, 0.7)", marginTop: 34 }}
+                animate={{ opacity: [0, 0.85, 0.35, 0.85] }}
+                transition={{ duration: 2.8, delay: 0.8, repeat: Infinity, repeatType: "mirror" }}
+                className="f-serif italic text-sm text-[rgba(205,178,135,0.7)] mt-6 sm:mt-8"
               >
-                move, to begin
+                move or tap, to begin
               </motion.div>
             </div>
           </motion.div>

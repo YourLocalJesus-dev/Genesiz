@@ -234,6 +234,30 @@ export function useWorkshop() {
     setView("bench");
   };
 
+  const unveil = () => {
+    if (veiledRef.current) {
+      setVeiled(false);
+      whisperOnce(
+        "start",
+        stored
+          ? solved
+            ? "welcome back. the catalogue waits at the top of the bench."
+            : "welcome back. everything is where you left it."
+          : "move slowly. search the dark.",
+        5200,
+      );
+    }
+  };
+
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      if (veiledRef.current) {
+        unveil();
+      }
+    }, 2600);
+    return () => window.clearTimeout(t);
+  }, []);
+
   const pickables = (ts: ToolState[], isTouch = false): { id: ToolId; px: number; py: number; r: number }[] => {
     const out: { id: ToolId; px: number; py: number; r: number }[] = [];
     const baseR = isTouch || vw < 640 ? 46 : HOVER_R;
@@ -654,17 +678,8 @@ export function useWorkshop() {
 
       if (veiledRef.current) {
         veilSamples.current++;
-        if (veilSamples.current > 2) {
-          setVeiled(false);
-          whisperOnce(
-            "start",
-            stored
-              ? solved
-                ? "welcome back. the catalogue waits at the top of the bench."
-                : "welcome back. everything is where you left it."
-              : "move slowly. search the dark.",
-            5200,
-          );
+        if (veilSamples.current > 1) {
+          unveil();
         }
       }
 
@@ -765,9 +780,7 @@ export function useWorkshop() {
       const el = e.target as HTMLElement | null;
       if (el && el.closest && el.closest("[data-native]")) return;
       if (veiledRef.current) {
-        veilSamples.current = 99;
-        setVeiled(false);
-        whisperOnce("start", stored ? "welcome back. everything is where you left it." : "move slowly. search the dark.", 5200);
+        unveil();
       }
       const x = e.clientX;
       const y = e.clientY;
@@ -929,5 +942,6 @@ export function useWorkshop() {
     mv: { mx, my, sx, sy, lx, ly, ls, rot },
     toggleMute,
     resetBench,
+    unveil,
   };
 }

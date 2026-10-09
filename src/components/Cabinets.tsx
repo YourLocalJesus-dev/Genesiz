@@ -23,11 +23,11 @@ export default function Cabinets({ foci, tools, open, activeId, hoverId }: Props
         return (
           <div
             key={focus}
-            className="tool-pos max-w-[88vw]"
+            className="tool-pos"
             style={{
               left: `${seat.pos.x * 100}%`,
               top: `${seat.pos.y * 100}%`,
-              width: "clamp(160px, 48vw, 210px)",
+              width: CAB_W,
               transform: `translate(-50%, ${-SLAB_H / 2}px)`,
               zIndex: 4,
               pointerEvents: "none",

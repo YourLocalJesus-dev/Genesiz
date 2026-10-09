@@ -6,31 +6,26 @@ interface Props {
   catalog: (ToolId | null)[];
   activeId: ToolId | null;
   solved: boolean;
-  sockets?: { x: number; y: number }[];
 }
 
-export default function IndexTable({ catalog, activeId, solved, sockets = SOCKETS }: Props) {
-  const first = sockets[0] ?? { x: 0.28, y: TABLE_Y };
-  const last = sockets[5] ?? { x: 0.72, y: TABLE_Y };
-  const pad = 0.046;
-
+export default function IndexTable({ catalog, activeId, solved }: Props) {
   return (
     <motion.div
       initial={{ opacity: 0, y: -14 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -14 }}
       transition={{ duration: 1.6, ease: "easeOut" }}
-      className="absolute inset-0 pointer-events-none"
-      style={{ zIndex: 5 }}
+      className="absolute"
+      style={{ left: 0, right: 0, top: 0, bottom: 0, zIndex: 5, pointerEvents: "none" }}
     >
+      {}
       <div
         style={{
           position: "absolute",
-          left: `${Math.max(1, (first.x - pad) * 100)}%`,
-          width: `${Math.min(98, (last.x - first.x + pad * 2) * 100)}%`,
-          top: `${(TABLE_Y - 0.062) * 100}%`,
-          height: "12.8%",
-          minHeight: 68,
+          left: `${(SOCKETS[0].x - 0.046) * 100}%`,
+          width: `${(SOCKETS[5].x - SOCKETS[0].x + 0.092) * 100}%`,
+          top: `${(TABLE_Y - 0.066) * 100}%`,
+          height: "12.4%",
           borderRadius: 10,
           border: "1px solid rgba(255, 214, 160, 0.05)",
           background: "rgba(255, 214, 160, 0.012)",
@@ -40,20 +35,19 @@ export default function IndexTable({ catalog, activeId, solved, sockets = SOCKET
       <div
         className="f-mono absolute"
         style={{
-          left: "50%",
-          transform: "translateX(-50%)",
-          top: `calc(${TABLE_Y * 100}% - clamp(32px, 5.5vh, 42px))`,
-          fontSize: "clamp(7px, 1.8vw, 8.5px)",
+          left: `${(SOCKETS[0].x - 0.046) * 100}%`,
+          top: `${(TABLE_Y - 0.054) * 100}%`,
+          paddingLeft: 16,
+          fontSize: 8,
           letterSpacing: "0.32em",
           textTransform: "uppercase",
-          color: "rgba(205, 178, 135, 0.35)",
-          whiteSpace: "nowrap",
+          color: "rgba(205, 178, 135, 0.30)",
         }}
       >
         the index
       </div>
 
-      {sockets.map((s, i) => {
+      {SOCKETS.map((s, i) => {
         const filled = catalog[i] !== null;
         const correct = filled && catalog[i] === KEY_ORDER[i];
         return (
@@ -63,24 +57,24 @@ export default function IndexTable({ catalog, activeId, solved, sockets = SOCKET
             style={{
               left: `${s.x * 100}%`,
               top: `${s.y * 100}%`,
-              width: "clamp(36px, 8.5vw, 54px)",
-              height: "clamp(36px, 8.5vw, 54px)",
+              width: 54,
+              height: 54,
               transform: "translate(-50%, -50%)",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "center"
             }}
           >
             <div
               className="f-mono"
               style={{
                 position: "absolute",
-                bottom: "calc(100% + clamp(4px, 1.2vw, 9px))",
+                bottom: "calc(100% + 10px)",
                 left: "50%",
                 transform: "translateX(-50%)",
-                fontSize: "clamp(6.5px, 1.6vw, 8px)",
+                fontSize: 8,
                 letterSpacing: "0.2em",
-                color: "rgba(226, 205, 168, 0.35)",
+                color: "rgba(226, 205, 168, 0.32)",
               }}
             >
               {ROMAN[i]}
@@ -105,14 +99,14 @@ export default function IndexTable({ catalog, activeId, solved, sockets = SOCKET
               className="f-mono"
               style={{
                 position: "absolute",
-                top: "calc(100% + clamp(4px, 1.2vw, 9px))",
+                top: "calc(100% + 10px)",
                 left: "50%",
                 transform: "translateX(-50%)",
-                fontSize: "clamp(6.5px, 1.6vw, 8px)",
-                letterSpacing: "0.22em",
+                fontSize: 8,
+                letterSpacing: "0.26em",
                 textTransform: "uppercase",
                 whiteSpace: "nowrap",
-                color: "rgba(164, 152, 133, 0.38)",
+                color: "rgba(164, 152, 133, 0.36)",
               }}
             >
               {SOCKET_VERBS[i]}

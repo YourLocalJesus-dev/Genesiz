@@ -17,7 +17,6 @@ import {
   clampN,
   drawerSlotOffset,
   freshTools,
-  getSockets,
   slotPos,
 } from "../lib/tools";
 import { Tracker } from "./tracker";
@@ -179,16 +178,12 @@ export function useWorkshop() {
     y: clampN(y / Math.max(vh, 1), 0.02, 0.98),
   });
 
-  const sockets = useMemo(() => getSockets(vw), [vw]);
-
   const socketHit = (x: number, y: number): number => {
     let hit = -1;
     let best = Infinity;
-    const socs = getSockets(vw);
-    const hitR = vw < 640 ? 36 : 48;
-    socs.forEach((s, i) => {
+    SOCKETS.forEach((s, i) => {
       const d = Math.hypot(x - s.x * vw, y - s.y * vh);
-      if (d < hitR && d < best) {
+      if (d < 48 && d < best) {
         best = d;
         hit = i;
       }
@@ -234,33 +229,8 @@ export function useWorkshop() {
     setView("bench");
   };
 
-  const unveil = () => {
-    if (veiledRef.current) {
-      setVeiled(false);
-      whisperOnce(
-        "start",
-        stored
-          ? solved
-            ? "welcome back. the catalogue waits at the top of the bench."
-            : "welcome back. everything is where you left it."
-          : "move slowly. search the dark.",
-        5200,
-      );
-    }
-  };
-
-  useEffect(() => {
-    const t = window.setTimeout(() => {
-      if (veiledRef.current) {
-        unveil();
-      }
-    }, 2600);
-    return () => window.clearTimeout(t);
-  }, []);
-
-  const pickables = (ts: ToolState[], isTouch = false): { id: ToolId; px: number; py: number; r: number }[] => {
+  const pickables = (ts: ToolState[]): { id: ToolId; px: number; py: number; r: number }[] => {
     const out: { id: ToolId; px: number; py: number; r: number }[] = [];
-    const baseR = isTouch || vw < 640 ? 46 : HOVER_R;
     ts.forEach((t) => {
       if (t.id === activeId || t.vis === "hidden") return;
       if (t.tuckedInto && drawersLike) {
@@ -271,10 +241,10 @@ export function useWorkshop() {
           id: t.id,
           px: seat.pos.x * vw + drawerSlotOffset(t.drawerSlot),
           py: seat.pos.y * vh - SLAB_H / 2 + SLAB_H + 3 + DRAWER_H / 2 - 4,
-          r: isTouch ? 38 : 30,
+          r: 30,
         });
       } else {
-        out.push({ id: t.id, px: t.pos.x * vw, py: t.pos.y * vh, r: baseR });
+        out.push({ id: t.id, px: t.pos.x * vw, py: t.pos.y * vh, r: HOVER_R });
       }
     });
     return out;
@@ -447,7 +417,7 @@ export function useWorkshop() {
     if (soc >= 0) {
       seatedHere = true;
       rotV = 0;
-      target = { ...sockets[soc] };
+      target = { ...SOCKETS[soc] };
       const occ = catalog[soc];
       const nc = [...catalog];
       const cur = nc.indexOf(id);
@@ -455,7 +425,7 @@ export function useWorkshop() {
       if (occ && occ !== id) {
         
         releasesRef.current[occ] = { k: ++releaseK.current, dx: 0, dy: -0.115 * vh };
-        const outPos = { x: sockets[soc].x, y: sockets[soc].y + 0.115 };
+        const outPos = { x: SOCKETS[soc].x, y: SOCKETS[soc].y + 0.115 };
         setTools((ts) => ts.map((t) => (t.id === occ ? { ...t, pos: outPos, rot: START_ROT[occ] * 0.6 } : t)));
       }
       nc[soc] = id;
@@ -633,35 +603,6 @@ export function useWorkshop() {
     if (activeId && now - pr.t < 520 && moved < 14) putdown(activeId, pct(mx.get(), my.get()));
   };
 
-  const toolsRef = useRef(tools);
-  toolsRef.current = tools;
-  const activeIdRef = useRef(activeId);
-  activeIdRef.current = activeId;
-  const hoverIdRef = useRef(hoverId);
-  hoverIdRef.current = hoverId;
-  const modeRef = useRef(mode);
-  modeRef.current = mode;
-  const openCabRef = useRef(openCab);
-  openCabRef.current = openCab;
-  const veiledRef = useRef(veiled);
-  veiledRef.current = veiled;
-  const viewRef = useRef(view);
-  viewRef.current = view;
-  const vpRef = useRef(vp);
-  vpRef.current = vp;
-  const putdownRef = useRef(putdown);
-  putdownRef.current = putdown;
-  const activateRef = useRef(activate);
-  activateRef.current = activate;
-  const beginPressRef = useRef(beginPress);
-  beginPressRef.current = beginPress;
-  const endPressRef = useRef(endPress);
-  endPressRef.current = endPress;
-  const exitSiteRef = useRef(exitSite);
-  exitSiteRef.current = exitSite;
-  const toggleMuteRef = useRef(toggleMute);
-  toggleMuteRef.current = toggleMute;
-
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
       const x = e.clientX;
@@ -670,16 +611,19 @@ export function useWorkshop() {
       my.set(y);
       tracker.onMove(x, y);
 
-      const currentTools = toolsRef.current;
-      const currentActiveId = activeIdRef.current;
-      const currentMode = modeRef.current;
-      const currentVw = vpRef.current.vw;
-      const currentVh = vpRef.current.vh;
-
-      if (veiledRef.current) {
+      if (veiled) {
         veilSamples.current++;
-        if (veilSamples.current > 1) {
-          unveil();
+        if (veilSamples.current > 2) {
+          setVeiled(false);
+          whisperOnce(
+            "start",
+            stored
+              ? solved
+                ? "welcome back. the catalogue waits at the top of the bench."
+                : "welcome back. everything is where you left it."
+              : "move slowly. search the dark.",
+            5200,
+          );
         }
       }
 
@@ -695,30 +639,29 @@ export function useWorkshop() {
       const speed = lm ? Math.hypot(x - lm.x, y - lm.y) : 0;
       lastMove.current = { x, y, t: performance.now() };
 
-      const cab = cabinetAt(currentTools, x, y);
-      if (cab !== openCabRef.current) {
+      const cab = cabinetAt(tools, x, y);
+      if (cab !== openCab) {
         if (cab) sound.drawerSlide();
         setOpenCab(cab);
       }
 
       let cand: ToolId | null = null;
       let best = Infinity;
-      const isTouch = e.pointerType === "touch";
-      pickables(currentTools, isTouch).forEach((p) => {
+      pickables(tools).forEach((p) => {
         const d = Math.hypot(x - p.px, y - p.py);
         if (d < p.r && d < best) {
           best = d;
           cand = p.id;
         }
       });
-      if (cand !== hoverIdRef.current) {
-        if (hoverStart.current && !currentActiveId)
+      if (cand !== hoverId) {
+        if (hoverStart.current && !activeId)
           tracker.recordDwell(hoverStart.current.id, performance.now() - hoverStart.current.t);
-        hoverStart.current = cand && !currentActiveId ? { id: cand, t: performance.now() } : null;
+        hoverStart.current = cand && !activeId ? { id: cand, t: performance.now() } : null;
         setHoverId(cand);
-        if (cand && !currentActiveId) sound.click(cand, true);
+        if (cand && !activeId) sound.click(cand, true);
         if (cand) {
-          const t = currentTools.find((tt) => tt.id === cand);
+          const t = tools.find((tt) => tt.id === cand);
           if (t && t.remembered && !t.greeted) {
             sound.chime();
             setTools((ts) => ts.map((tt) => (tt.id === t.id ? { ...tt, greeted: true } : tt)));
@@ -726,23 +669,20 @@ export function useWorkshop() {
         }
       }
 
-      if (currentMode === "empty" && !currentActiveId) {
+      if (mode === "empty" && !activeId) {
         const foundIds: ToolId[] = [];
         let touched = false;
-        const next = currentTools.map((t) => {
-          if (t.vis === "idle") return t;
-          const d = Math.hypot(x - t.pos.x * currentVw, y - t.pos.y * currentVh);
+        const next = tools.map((t) => {
+          if (t.vis !== "hidden") return t;
+          const d = Math.hypot(x - t.pos.x * vw, y - t.pos.y * vh);
           if (d < DISCOVER_R) {
-            if (t.vis !== "idle") {
-              touched = true;
-              foundIds.push(t.id);
-              return { ...t, vis: "idle" as const };
-            }
-          } else if (d < REVEAL_R) {
-            if (t.vis !== "ghost") {
-              touched = true;
-              return { ...t, vis: "ghost" as const };
-            }
+            touched = true;
+            foundIds.push(t.id);
+            return { ...t, vis: "idle" as const };
+          }
+          if (d < REVEAL_R) {
+            touched = true;
+            return { ...t, vis: "ghost" as const };
           }
           return t;
         });
@@ -751,26 +691,26 @@ export function useWorkshop() {
         if (d0) {
           sound.reveal();
           whisperOnce(`discover-${d0}`, `found — ${TOOLS[d0].name}. ${TOOLS[d0].desc}.`, 5200);
-        } else if (touched && foundIds.length === 0) {
+        } else if (touched) {
           whisperOnce("ghost", "something waits here.", 3400);
         }
       }
 
       if (!cand && speed > 5) sound.scrape(speed);
 
-      if (currentActiveId && lm) rotTarget.set(clampN((x - lm.x) * 0.55, -13, 13));
+      if (activeId && lm) rotTarget.set(clampN((x - lm.x) * 0.55, -13, 13));
 
       lsTarget.set(
-        cand ? 0.82 : currentActiveId ? 1.06 : currentMode === "empty" && speed > 4 ? 1.32 : 1,
+        cand ? 0.82 : activeId ? 1.06 : mode === "empty" && speed > 4 ? 1.32 : 1,
       );
 
       if (previewTimer.current) window.clearTimeout(previewTimer.current);
-      if (currentActiveId && !pressRef.current) {
+      if (activeId && !pressRef.current) {
         setPreview(false);
         previewTimer.current = window.setTimeout(() => {
-          if (activeIdRef.current && !pressRef.current) setPreview(true);
+          if (activeId && !pressRef.current) setPreview(true);
         }, 1300);
-      } else if (!currentActiveId) {
+      } else if (!activeId) {
         setPreview(false);
       }
     };
@@ -779,49 +719,43 @@ export function useWorkshop() {
       sound.unlock();
       const el = e.target as HTMLElement | null;
       if (el && el.closest && el.closest("[data-native]")) return;
-      if (veiledRef.current) {
-        unveil();
+      if (veiled) {
+        veilSamples.current = 99;
+        setVeiled(false);
+        whisperOnce("start", stored ? "welcome back. everything is where you left it." : "move slowly. search the dark.", 5200);
       }
       const x = e.clientX;
       const y = e.clientY;
-      const currentTools = toolsRef.current;
-      const currentActiveId = activeIdRef.current;
       let cand: ToolId | null = null;
       let best = Infinity;
-      const isTouch = e.pointerType === "touch";
-      const extraHit = isTouch ? 12 : 6;
-      pickables(currentTools, isTouch).forEach((p) => {
+      pickables(tools).forEach((p) => {
         const d = Math.hypot(x - p.px, y - p.py);
-        if (d < p.r + extraHit && d < best) {
+        if (d < p.r + 6 && d < best) {
           best = d;
           cand = p.id;
         }
       });
       if (cand) {
-        activateRef.current(cand);
+        activate(cand);
         return;
       }
-      if (currentActiveId) {
+      if (activeId) {
         setPreview(false);
-        beginPressRef.current(x, y);
+        beginPress(x, y);
       }
     };
 
-    const onUp = () => endPressRef.current();
+    const onUp = () => endPress();
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        if (viewRef.current === "site") exitSiteRef.current();
-        else if (activeIdRef.current) putdownRef.current(activeIdRef.current, pct(mx.get(), my.get()));
+        if (view === "site") exitSite();
+        else if (activeId) putdown(activeId, pct(mx.get(), my.get()));
       }
-      if (e.key === "m" || e.key === "M") toggleMuteRef.current();
+      if (e.key === "m" || e.key === "M") toggleMute();
     };
 
-    const onResize = () => {
-      const newVp = { vw: window.innerWidth, vh: window.innerHeight };
-      vpRef.current = newVp;
-      setVp(newVp);
-    };
+    const onResize = () => setVp({ vw: window.innerWidth, vh: window.innerHeight });
 
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerdown", onDown);
@@ -839,7 +773,7 @@ export function useWorkshop() {
       window.removeEventListener("resize", onResize);
       window.removeEventListener("blur", onUp);
     };
-  }, []);
+  });
 
   useEffect(() => {
     const t = window.setTimeout(() => {
@@ -908,7 +842,6 @@ export function useWorkshop() {
   return {
     vw,
     vh,
-    sockets,
     mode,
     base,
     tools,
@@ -942,6 +875,5 @@ export function useWorkshop() {
     mv: { mx, my, sx, sy, lx, ly, ls, rot },
     toggleMute,
     resetBench,
-    unveil,
   };
 }

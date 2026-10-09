@@ -124,28 +124,12 @@ html, body {
 .cat-row:hover { background: rgba(46, 38, 24, 0.045); }
 .cat-solid:hover { opacity: 0.84; }
 
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
 @media (max-width: 760px) {
   .cat-nav a { display: none; }
-  .cat-nav .cat-link {
-    font-size: 8px;
-    padding: 2px 4px;
-  }
 }
 
 @media (max-width: 860px) {
-  .cat-two { grid-template-columns: 1fr !important; gap: 32px !important; }
+  .cat-two { grid-template-columns: 1fr !important; gap: 42px !important; }
 }
 
 .mote {

@@ -196,22 +196,10 @@ export const freshTools = (): ToolState[] =>
 export const TABLE_Y = 0.15;
 export const TABLE_GAP = 0.088;
 
-export const getSocketGap = (vw = 1440) => {
-  if (vw < 420) return 0.145;
-  if (vw < 640) return 0.125;
-  if (vw < 860) return 0.105;
-  return TABLE_GAP;
-};
-
-export const getSockets = (vw = 1440): VecN[] => {
-  const gap = getSocketGap(vw);
-  return Array.from({ length: 6 }, (_, i) => ({
-    x: clampN(0.5 + (i - 2.5) * gap, 0.07, 0.93),
-    y: TABLE_Y,
-  }));
-};
-
-export const SOCKETS: VecN[] = getSockets(1440);
+export const SOCKETS: VecN[] = Array.from({ length: 6 }, (_, i) => ({
+  x: 0.5 + (i - 2.5) * TABLE_GAP,
+  y: TABLE_Y,
+}));
 
 export const KEY_ORDER: ToolId[] = ["ruler", "knife", "brush", "pen", "magnifier", "clamp"];
 export const SOCKET_VERBS = ["measure", "cut", "mark", "write", "look", "hold"];

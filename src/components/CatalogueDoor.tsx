@@ -24,7 +24,6 @@ export default function CatalogueDoor({ visits, onEnter }: { visits: number; onE
       <motion.div
         animate={{ opacity: hot ? 0.55 : 0.22, width: hot ? 150 : 110 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="hidden sm:block"
         style={{
           height: 1,
           background: "linear-gradient(90deg, transparent, rgba(226, 205, 168, 0.9))",
@@ -45,14 +44,13 @@ export default function CatalogueDoor({ visits, onEnter }: { visits: number; onE
           y: hot ? -2 : 0,
         }}
         transition={{ duration: 0.45, ease: "easeOut" }}
-        className="max-w-[92vw]"
         style={{
           position: "relative",
           display: "flex",
           alignItems: "center",
-          gap: 14,
-          padding: "11px 18px",
-          margin: "0 8px",
+          gap: 16,
+          padding: "13px 26px 13px 19px",
+          margin: "0 14px",
           borderRadius: 4,
           border: "1px solid rgba(255,214,160,0.2)",
           background:
@@ -154,7 +152,6 @@ export default function CatalogueDoor({ visits, onEnter }: { visits: number; onE
       <motion.div
         animate={{ opacity: hot ? 0.55 : 0.22, width: hot ? 150 : 110 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="hidden sm:block"
         style={{
           height: 1,
           background: "linear-gradient(90deg, rgba(226, 205, 168, 0.9), transparent)",

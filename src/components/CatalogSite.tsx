@@ -84,22 +84,14 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
 
   const SectionOrder = (
     <Section key="order" id="cat-order" n="The order" L={L}>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, ${L.variant === "row" || L.variant === "annotated" ? "130px" : "96px"}), 1fr))`,
-          gap: 1,
-          background: L.hair,
-          border: `1px solid ${L.hair}`,
-        }}
-      >
+      <div style={{ display: "grid", gridTemplateColumns: `repeat(${L.variant === "row" || L.variant === "annotated" ? 3 : 6}, 1fr)`, gap: 1, background: L.hair, border: `1px solid ${L.hair}` }}>
         {KEY_ORDER.map((id, i) => (
-          <div key={id} style={{ background: L.paper, padding: "16px 8px", textAlign: "center" }}>
+          <div key={id} style={{ background: L.paper, padding: "20px 12px", textAlign: "center" }}>
             <div className="f-mono" style={{ fontSize: 9, letterSpacing: "0.2em", color: L.dim }}>{ROMAN[i]}</div>
-            <div style={{ display: "flex", justifyContent: "center", margin: "10px 0 8px" }}>
-              <ToolShape id={id} size={30} ink />
+            <div style={{ display: "flex", justifyContent: "center", margin: "14px 0 10px" }}>
+              <ToolShape id={id} size={34} ink />
             </div>
-            <div className={L.mono ? "f-mono" : "f-serif italic"} style={{ fontSize: L.mono ? 10.5 : 16, letterSpacing: L.mono ? "0.14em" : undefined, textTransform: L.mono ? "uppercase" : "none" }}>
+            <div className={L.mono ? "f-mono" : "f-serif italic"} style={{ fontSize: L.mono ? 11 : 17, letterSpacing: L.mono ? "0.14em" : undefined, textTransform: L.mono ? "uppercase" : "none" }}>
               {SOCKET_VERBS[i]}
             </div>
           </div>
@@ -124,14 +116,7 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
         layout
         style={{
           display: "grid",
-          gridTemplateColumns:
-            L.variant === "row" || L.variant === "annotated"
-              ? "1fr"
-              : L.variant === "wash"
-              ? "repeat(auto-fit, minmax(min(100%, 220px), 1fr))"
-              : L.variant === "strip"
-              ? "repeat(auto-fit, minmax(min(100%, 90px), 1fr))"
-              : "repeat(auto-fit, minmax(min(100%, 140px), 1fr))",
+          gridTemplateColumns: `repeat(${L.cols}, 1fr)`,
           gap: L.framed || L.variant === "wash" ? 14 : 1,
           background: L.framed || L.variant === "wash" ? "transparent" : L.hair,
           border: L.framed || L.variant === "wash" ? "none" : `1px solid ${L.hair}`,
@@ -396,11 +381,11 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
       )}
 
       <header style={{ position: "sticky", top: 0, zIndex: 5, background: `${L.paper}ee`, backdropFilter: "blur(8px)", borderBottom: `1px solid ${L.ink}`, transition: "background 0.9s ease" }}>
-        <div style={{ maxWidth: L.measure, margin: "0 auto", padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap", transition: "max-width 0.7s ease" }}>
-          <div className="f-mono" style={{ fontSize: 9.5, letterSpacing: "0.26em", textTransform: "uppercase", whiteSpace: "nowrap" }}>
+        <div style={{ maxWidth: L.measure, margin: "0 auto", padding: "15px 36px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 18, transition: "max-width 0.7s ease" }}>
+          <div className="f-mono" style={{ fontSize: 9.5, letterSpacing: "0.3em", textTransform: "uppercase", whiteSpace: "nowrap" }}>
             Workshop — Catalogue
           </div>
-          <nav className="f-mono cat-nav flex items-center gap-2 sm:gap-4 overflow-x-auto max-w-full no-scrollbar py-1" style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase" }}>
+          <nav className="f-mono cat-nav" style={{ display: "flex", alignItems: "center", gap: 18, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase" }}>
             {L.order.map((s) => (
               <button
                 key={s}
@@ -412,13 +397,13 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
                     container.scrollTo({ top, behavior: "smooth" });
                   }
                 }}
-                className="cat-link hover:underline shrink-0"
-                style={{ color: L.dim, background: "none", border: "none", padding: "2px 4px", cursor: "pointer", textTransform: "inherit", font: "inherit", letterSpacing: "inherit" }}
+                className="cat-link"
+                style={{ color: L.dim, background: "none", border: "none", padding: 0, cursor: "pointer", textTransform: "inherit", font: "inherit", letterSpacing: "inherit" }}
               >
                 {s}
               </button>
             ))}
-            <button onClick={onReturn} className="f-mono cat-return shrink-0 font-medium" style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: L.ink, background: "transparent", border: `1px solid ${L.ink}`, borderRadius: 999, padding: "5px 12px", cursor: "pointer" }}>
+            <button onClick={onReturn} className="f-mono cat-return" style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: L.ink, background: "transparent", border: `1px solid ${L.ink}`, borderRadius: 999, padding: "6px 14px", cursor: "pointer" }}>
               ← the bench
             </button>
           </nav>
@@ -431,15 +416,15 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
               exit={{ height: 0, opacity: 0 }}
               style={{ overflow: "hidden", borderTop: `1px solid ${L.hair}`, background: `${L.accent}14` }}
             >
-              <div style={{ maxWidth: L.measure, margin: "0 auto", padding: "8px 16px sm:9px 36px", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+              <div style={{ maxWidth: L.measure, margin: "0 auto", padding: "9px 36px", display: "flex", alignItems: "center", gap: 14 }}>
                 <ToolShape id={lensId} size={18} ink />
-                <span className="f-mono text-xs sm:text-[9px]" style={{ letterSpacing: "0.2em", textTransform: "uppercase" }}>
+                <span className="f-mono" style={{ fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase" }}>
                   re-set as <strong style={{ color: L.accent }}>{L.title}</strong>
                 </span>
-                <span className={L.mono ? "f-mono hidden sm:inline" : "f-serif italic hidden sm:inline"} style={{ fontSize: L.mono ? 10 : 14, color: L.dim, flex: 1 }}>
+                <span className={L.mono ? "f-mono" : "f-serif italic"} style={{ fontSize: L.mono ? 10 : 14, color: L.dim, flex: 1 }}>
                   {L.blurb}
                 </span>
-                <button onClick={() => pick(lensId)} className="f-mono cat-link ml-auto" style={{ fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: L.dim, background: "none", border: "none", cursor: "pointer", whiteSpace: "nowrap" }}>
+                <button onClick={() => pick(lensId)} className="f-mono cat-link" style={{ fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: L.dim, background: "none", border: "none", cursor: "pointer", whiteSpace: "nowrap" }}>
                   release ✕
                 </button>
               </div>
@@ -448,10 +433,10 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
         </AnimatePresence>
       </header>
 
-      <div style={{ maxWidth: L.measure, margin: "0 auto", padding: "0 16px 100px", position: "relative", transition: "max-width 0.7s ease" }}>
+      <div style={{ maxWidth: L.measure, margin: "0 auto", padding: "0 36px 140px", position: "relative", transition: "max-width 0.7s ease" }}>
         
-        <section style={{ padding: `${Math.max(36, S(70))}px 0 ${Math.max(24, S(52))}px` }}>
-          <div className="f-mono" style={{ fontSize: 9, letterSpacing: "0.26em", textTransform: "uppercase", color: L.dim }}>
+        <section style={{ padding: `${S(70)}px 0 ${S(52)}px` }}>
+          <div className="f-mono" style={{ fontSize: 9.5, letterSpacing: "0.28em", textTransform: "uppercase", color: L.dim }}>
             Issued by the bench · {date}
           </div>
           <motion.h1
@@ -460,11 +445,11 @@ export default function CatalogSite({ tools, marks, visits, mode, getSignals, on
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
             className={L.heroItalic ? "f-serif italic" : L.mono ? "f-mono" : "f-serif"}
-            style={{ fontSize: `clamp(28px, 6.5vw, ${L.heroSize}px)`, lineHeight: 1.06, margin: "14px 0 0", fontWeight: 500, letterSpacing: L.mono ? "-0.01em" : "-0.01em" }}
+            style={{ fontSize: L.heroSize, lineHeight: 1.04, margin: "16px 0 0", fontWeight: 500, letterSpacing: L.mono ? "-0.01em" : "-0.01em" }}
           >
             {lensId ? L.title : `Arrangement nº ${visits}`}
           </motion.h1>
-          <p className={body} style={{ fontSize: L.mono ? 12.5 : 19, lineHeight: 1.6, maxWidth: 560, marginTop: 18, color: L.dim }}>
+          <p className={body} style={{ fontSize: L.mono ? 13 : 21, lineHeight: 1.6, maxWidth: 560, marginTop: 22, color: L.dim }}>
             {lensId
               ? `${L.blurb} The same record, read through ${TOOLS[lensId].name}.`
               : `${MODE_META[mode].poem.charAt(0).toUpperCase()}${MODE_META[mode].poem.slice(1)} Every entry below is something your hands left behind.`}
@@ -595,16 +580,16 @@ function SpecimenCell({
 
   if (L.variant === "annotated") {
     return (
-      <button onClick={onPick} className="cat-card" style={{ ...shell, display: "flex", flexWrap: "wrap", gap: 16, padding: "20px 18px", borderBottom: `1px solid ${L.hair}`, alignItems: "flex-start" }}>
-        <ToolShape id={id} size={52} ink />
-        <span style={{ flex: "1 1 200px" }}>
-          <span className="f-serif italic" style={{ fontSize: 24, display: "block" }}>{def.name}</span>
-          <span className="f-serif" style={{ fontSize: 16, color: L.dim, display: "block", marginTop: 4 }}>{def.desc}</span>
-          <span className="f-serif italic" style={{ fontSize: 14.5, display: "block", marginTop: 10 }}>“{def.firstUse}”</span>
-          <span style={{ display: "block", height: 10 }} />
+      <button onClick={onPick} className="cat-card" style={{ ...shell, display: "flex", gap: 28, padding: "26px 24px", borderBottom: `1px solid ${L.hair}`, alignItems: "flex-start" }}>
+        <ToolShape id={id} size={64} ink />
+        <span style={{ flex: 1 }}>
+          <span className="f-serif italic" style={{ fontSize: 28, display: "block" }}>{def.name}</span>
+          <span className="f-serif" style={{ fontSize: 18, color: L.dim, display: "block", marginTop: 4 }}>{def.desc}</span>
+          <span className="f-serif italic" style={{ fontSize: 16, display: "block", marginTop: 12 }}>“{def.firstUse}”</span>
+          <span style={{ display: "block", height: 12 }} />
           {stats}
         </span>
-        <span className="f-mono" style={{ fontSize: 9, color: L.accent, minWidth: 70, lineHeight: 1.8 }}>
+        <span className="f-mono" style={{ fontSize: 9, color: L.accent, width: 74, lineHeight: 1.9 }}>
           † specimen {ROMAN[i]}<br />† {marks} marks<br />† {dwell}s held
         </span>
       </button>

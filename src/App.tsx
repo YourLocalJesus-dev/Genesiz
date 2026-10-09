@@ -65,9 +65,9 @@ export default function App() {
 
   if (secretOpen) {
     return (
-      <div className="fixed inset-0 select-none px-6" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#0a0908", color: "#e2d5c1", zIndex: 9999 }}>
-        <div className="f-serif italic" style={{ fontSize: "clamp(100px, 25vw, 220px)", lineHeight: 1, textShadow: "0 0 40px rgba(226, 213, 193, 0.2)" }}>G</div>
-        <div className="f-mono text-center" style={{ fontSize: "clamp(10px, 2.5vw, 14px)", letterSpacing: "clamp(0.2em, 0.5vw, 0.4em)", textTransform: "uppercase", marginTop: "clamp(20px, 4vh, 40px)", color: "rgba(226, 213, 193, 0.5)" }}>yay the mods found it</div>
+      <div className="fixed inset-0 select-none" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#0a0908", color: "#e2d5c1", zIndex: 9999 }}>
+        <div className="f-serif italic" style={{ fontSize: 220, lineHeight: 1, textShadow: "0 0 40px rgba(226, 213, 193, 0.2)" }}>G</div>
+        <div className="f-mono" style={{ fontSize: 14, letterSpacing: "0.4em", textTransform: "uppercase", marginTop: 40, color: "rgba(226, 213, 193, 0.5)" }}>yay the mods found it</div>
         <button
           className="f-mono"
           data-native
@@ -79,7 +79,7 @@ export default function App() {
             e.stopPropagation();
             closeSecret();
           }}
-          style={{ marginTop: "clamp(40px, 8vh, 80px)", padding: "12px 24px", border: "1px solid rgba(226, 213, 193, 0.3)", borderRadius: 999, background: "none", color: "inherit", cursor: "pointer", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase" }}
+          style={{ marginTop: 80, padding: "12px 24px", border: "1px solid rgba(226, 213, 193, 0.3)", borderRadius: 999, background: "none", color: "inherit", cursor: "pointer", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase" }}
         >
           return to bench
         </button>
@@ -131,7 +131,7 @@ export default function App() {
 
       <AnimatePresence>
         {w.tableOpen && w.view === "bench" && (
-          <IndexTable catalog={w.catalog} activeId={w.activeId} solved={w.solved} sockets={w.sockets} />
+          <IndexTable catalog={w.catalog} activeId={w.activeId} solved={w.solved} />
         )}
       </AnimatePresence>
 
@@ -263,36 +263,43 @@ export default function App() {
         {w.veiled && (
           <motion.div
             initial={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 1.2, ease: "easeInOut" } }}
-            className="absolute inset-0 cursor-pointer"
-            style={{ zIndex: 60, background: "rgba(7, 6, 5, 0.94)" }}
-            onClick={w.unveil}
-            onPointerDown={w.unveil}
+            exit={{ opacity: 0, transition: { duration: 1.6, ease: "easeInOut" } }}
+            className="absolute inset-0"
+            style={{ zIndex: 60, background: "rgba(7, 6, 5, 0.96)", pointerEvents: "none" }}
           >
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center px-4 w-full max-w-lg select-none">
+            <div className="absolute left-1/2 top-1/2" style={{ transform: "translate(-50%, -50%)", textAlign: "center" }}>
               <motion.div
                 initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-                className="f-serif italic text-3xl sm:text-[40px] text-[rgba(232,219,197,0.92)] tracking-[0.01em]"
+                transition={{ duration: 1.8, delay: 0.4, ease: "easeOut" }}
+                className="f-serif italic"
+                style={{ fontSize: 40, color: "rgba(232, 219, 197, 0.92)", letterSpacing: "0.01em" }}
               >
                 the workshop
               </motion.div>
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="f-mono text-[9px] sm:text-[9.5px] text-[rgba(164,152,133,0.6)] tracking-[0.25em] sm:tracking-[0.3em] uppercase mt-3 sm:mt-4"
+                transition={{ duration: 1.4, delay: 1.4 }}
+                className="f-mono"
+                style={{
+                  fontSize: 9.5,
+                  color: "rgba(164, 152, 133, 0.6)",
+                  letterSpacing: "0.3em",
+                  textTransform: "uppercase",
+                  marginTop: 16,
+                }}
               >
                 a quiet bench that arranges itself around how you work
               </motion.div>
               <motion.div
                 initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.85, 0.35, 0.85] }}
-                transition={{ duration: 2.8, delay: 0.8, repeat: Infinity, repeatType: "mirror" }}
-                className="f-serif italic text-sm text-[rgba(205,178,135,0.7)] mt-6 sm:mt-8"
+                animate={{ opacity: [0, 0.75, 0.3, 0.75] }}
+                transition={{ duration: 3.6, delay: 2.6, repeat: Infinity, repeatType: "mirror" }}
+                className="f-serif italic"
+                style={{ fontSize: 14, color: "rgba(205, 178, 135, 0.7)", marginTop: 34 }}
               >
-                move or tap, to begin
+                move, to begin
               </motion.div>
             </div>
           </motion.div>
